@@ -36,33 +36,29 @@ const LayoutBreadcrumbs = () => {
     const breadcrumbs = matches.filter(isBreadcrumbMatch)
 
     return (
-        <div>
-            <Breadcrumb>
-                <BreadcrumbList>
-                    {breadcrumbs.map((match, index) => {
-                        const isLast = index === breadcrumbs.length - 1
+        <Breadcrumb>
+            <BreadcrumbList>
+                {breadcrumbs.map((match, index) => {
+                    const isLast = index === breadcrumbs.length - 1
 
-                        return (
-                            <Fragment key={match.id}>
-                                <BreadcrumbItem>
-                                    {isLast ? (
-                                        <BreadcrumbPage>{match.handle.breadcrumb}</BreadcrumbPage>
-                                    ) : (
-                                        <BreadcrumbLink asChild>
-                                            <Link to={match.pathname}>
-                                                {match.handle.breadcrumb}
-                                            </Link>
-                                        </BreadcrumbLink>
-                                    )}
-                                </BreadcrumbItem>
+                    return (
+                        <Fragment key={match.id}>
+                            <BreadcrumbItem>
+                                {isLast ? (
+                                    <BreadcrumbPage>{match.handle.breadcrumb}</BreadcrumbPage>
+                                ) : (
+                                    <BreadcrumbLink asChild>
+                                        <Link to={match.pathname}>{match.handle.breadcrumb}</Link>
+                                    </BreadcrumbLink>
+                                )}
+                            </BreadcrumbItem>
 
-                                {!isLast && <BreadcrumbSeparator />}
-                            </Fragment>
-                        )
-                    })}
-                </BreadcrumbList>
-            </Breadcrumb>
-        </div>
+                            {!isLast && <BreadcrumbSeparator />}
+                        </Fragment>
+                    )
+                })}
+            </BreadcrumbList>
+        </Breadcrumb>
     )
 }
 

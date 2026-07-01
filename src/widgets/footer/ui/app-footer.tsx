@@ -1,6 +1,8 @@
 import { MailIcon } from "lucide-react"
 import { Link } from "react-router"
 
+import { APP_ROUTES } from "@shared/config/routes"
+
 const footerLinks = [
     {
         label: "GitHub",
@@ -18,7 +20,11 @@ const AppFooter = () => {
     return (
         <footer className="border-border bg-background text-foreground border-t font-sans">
             <div className="mx-auto flex max-w-[1280px] flex-row items-center justify-between gap-4 px-4 py-5">
-                <Link to="/" className="flex w-fit min-w-0 items-center" aria-label="F1">
+                <Link
+                    to={APP_ROUTES.home}
+                    className="flex w-fit min-w-0 items-center"
+                    aria-label="F1"
+                >
                     <img src="/logo.svg" alt="" className="h-5 w-auto" />
                 </Link>
 
