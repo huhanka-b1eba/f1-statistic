@@ -1,3 +1,3 @@
-import Footer from "./ui/Footer"
+import AppFooter from "./ui/app-footer.tsx"
 
-export default Footer
+export default AppFooter

@@ -14,13 +14,17 @@ const footerLinks = [
     },
 ]
 
-const Footer = () => {
+const AppFooter = () => {
     return (
         <footer className="border-border bg-background text-foreground border-t font-sans">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-5">
+            <div className="mx-auto flex max-w-[1280px] flex-row items-center justify-between gap-4 px-4 py-5">
                 <Link to="/" className="flex w-fit min-w-0 items-center" aria-label="F1">
-                    <img src="/logo.png" alt="" className="h-5 w-auto" />
+                    <img src="/logo.svg" alt="" className="h-5 w-auto" />
                 </Link>
+
+                <p className="text-muted-foreground text-center text-sm">
+                    &copy; 2026 F1 Statistic. Built by Aigiz.
+                </p>
 
                 <div className="flex items-center gap-2">
                     {footerLinks.map(({ label, href, icon: Icon, iconSrc }) => (
@@ -53,4 +57,4 @@ const Footer = () => {
     )
 }
 
-export default Footer
+export default AppFooter

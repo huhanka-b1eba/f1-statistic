@@ -8,7 +8,7 @@
 :root {
     font: 18px/145% var(--sans);
     letter-spacing: 0.18px;
-    color-scheme: light dark;
+    color-scheme: dark;
     color: var(--text);
     background: var(--bg);
     font-synthesis: none;
@@ -22,7 +22,6 @@
 }
 
 #root {
-    width: 1280px;
     max-width: 100%;
     margin: 0 auto;
     text-align: center;

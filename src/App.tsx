@@ -1,12 +1,10 @@
 import "./App.css"
-import BaseLayout from "@app/layouts/base-layout"
+
+import { RouterProvider } from "react-router"
+import router from "@app/routing"
 
 function App() {
-    return (
-        <>
-            <BaseLayout />
-        </>
-    )
+    return <RouterProvider router={router} />
 }
 
 export default App
