@@ -1,5 +1,7 @@
 import * as axios from "axios"
 import type { AxiosError, InternalAxiosRequestConfig } from "axios"
+import { delay } from "@shared/lib/utils.ts"
+import { showAlert } from "@shared/lib/alert-store.ts"
 
 type RetryConfig = InternalAxiosRequestConfig & {
     retryCount?: number
@@ -7,8 +9,6 @@ type RetryConfig = InternalAxiosRequestConfig & {
 
 const MAX_RETRIES = 3
 const RETRY_DELAYS = [200, 400, 800]
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -22,7 +22,11 @@ apiClient.interceptors.response.use(
         const config = error.config as RetryConfig | undefined
 
         if (error.response && error.response.status === 500) {
-            alert("Internal server error")
+            showAlert({
+                title: "Server error",
+                message: "Internal server error",
+                variant: "destructive",
+            })
 
             return Promise.reject(error)
         }
@@ -36,7 +40,11 @@ apiClient.interceptors.response.use(
         config.retryCount = config.retryCount ?? 0
 
         if (config.retryCount >= MAX_RETRIES) {
-            alert("Error connecting to server")
+            showAlert({
+                title: "Connection error",
+                message: "Error connecting to server",
+                variant: "destructive",
+            })
 
             return Promise.reject(error)
         }
