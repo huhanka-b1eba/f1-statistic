@@ -1,7 +1,9 @@
-import type { OpenF1Session } from "@shared/api/generated"
+import { getCircuitIdByLocation } from "@entities/circuit"
+
+import type { SessionListItem } from "@shared/api/generated"
 import { Badge } from "@shared/ui/badge"
 
-type SessionCardProps = OpenF1Session & {
+type SessionCardProps = SessionListItem & {
     flagImageUrl?: string
 }
 
@@ -22,17 +24,25 @@ const formatSessionDateRange = (dateStart?: string | null, dateEnd?: string | nu
 }
 
 const SessionCard = ({
-    session_name,
-    session_type,
-    circuit_short_name,
+    sessionName,
+    sessionType,
+    circuitShortName,
     flagImageUrl,
-    date_start,
-    date_end,
+    dateStart,
+    dateEnd,
+    location,
 }: SessionCardProps) => {
-    const dateRange = formatSessionDateRange(date_start, date_end)
+    const dateRange = formatSessionDateRange(dateStart, dateEnd)
+
+    const circuitId = location ? getCircuitIdByLocation(location) : null
+
+    console.log(circuitId)
 
     return (
-        <article className="border-border bg-card text-card-foreground hover:border-destructive w-full max-w-sm rounded-sm border p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:cursor-pointer">
+        <article
+            className="border-border bg-card text-card-foreground hover:border-destructive w-full max-w-sm rounded-sm border p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:cursor-pointer"
+            data-circuit-id={circuitId ?? undefined}
+        >
             <div className="flex min-h-36 gap-4">
                 <div className="flex min-w-0 flex-col">
                     <div className="h-12 w-12">
@@ -47,16 +57,16 @@ const SessionCard = ({
                     </div>
 
                     <p className="text-muted-foreground text-sm leading-none font-semibold">
-                        {session_type}
+                        {sessionType}
                     </p>
 
                     <h3 className="mt-2 mb-1 truncate text-base leading-tight font-bold">
-                        {session_name}
+                        {sessionName}
                     </h3>
 
-                    {circuit_short_name && (
+                    {circuitShortName && (
                         <p className="text-muted-foreground truncate text-sm leading-tight font-medium">
-                            {circuit_short_name}
+                            {circuitShortName}
                         </p>
                     )}
 
@@ -67,7 +77,7 @@ const SessionCard = ({
                     )}
 
                     <div className="mt-auto flex items-center gap-2 pt-3">
-                        <Badge variant="secondary">{session_type}</Badge>
+                        <Badge variant="secondary">{sessionType}</Badge>
                     </div>
                 </div>
             </div>
