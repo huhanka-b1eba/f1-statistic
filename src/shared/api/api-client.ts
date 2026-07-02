@@ -16,6 +16,9 @@ export const apiClient = axios.create({
     timeout: 10_000,
 })
 
+// alias for correct apicraft library operation
+export const instance = apiClient
+
 apiClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
