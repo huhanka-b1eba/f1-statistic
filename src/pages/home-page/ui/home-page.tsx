@@ -25,7 +25,7 @@ const HomePage = () => {
                 onSearchChange={setSearch}
             />
 
-            <SessionList sessions={filteredSessions} meetingFlags={meetingFlags} />
+            <SessionList sessions={filteredSessions} meetingFlags={meetingFlags} search={search} />
         </div>
     )
 }
