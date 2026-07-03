@@ -1,4 +1,5 @@
 import { Link } from "react-router"
+import { VirtuosoGrid } from "react-virtuoso"
 
 import { CircuitTrackPreview } from "@entities/circuit"
 import { SessionCard } from "@entities/session"
@@ -13,13 +14,21 @@ type SessionListProps = {
 }
 
 export const SessionList = ({ sessions, meetingFlags, search }: SessionListProps) => {
+    if (sessions.length === 0) {
+        return <p className="text-muted-foreground text-left">Sessions not found</p>
+    }
+
     return (
-        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {sessions.map((session) => (
+        <VirtuosoGrid
+            useWindowScroll
+            data={sessions}
+            computeItemKey={(_, session) => session.sessionKey}
+            listClassName="flex flex-wrap"
+            itemClassName="box-border flex w-full p-2 md:w-1/2 xl:w-1/3"
+            itemContent={(_, session) => (
                 <Link
-                    key={session.sessionKey}
                     to={getSessionRoute(session.sessionKey)}
-                    className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:outline-none"
+                    className="focus-visible:ring-ring block h-full w-full focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <SessionCard
                         {...session}
@@ -28,7 +37,7 @@ export const SessionList = ({ sessions, meetingFlags, search }: SessionListProps
                         highlightQuery={search}
                     />
                 </Link>
-            ))}
-        </div>
+            )}
+        />
     )
 }

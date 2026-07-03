@@ -1,6 +1,6 @@
 import type { SessionListItemWithFlagImage } from "./types.ts"
 
-export const mockSessions: SessionListItemWithFlagImage[] = [
+const raceSessions: SessionListItemWithFlagImage[] = [
     {
         sessionKey: 9161,
         meetingKey: 1219,
@@ -146,3 +146,33 @@ export const mockSessions: SessionListItemWithFlagImage[] = [
         flagImageUrl: "https://flagcdn.com/gb.svg",
     },
 ]
+
+const sessionVariants = [
+    { sessionType: "Practice 1", keyOffset: 1, startOffsetHours: -50, durationHours: 1 },
+    { sessionType: "Practice 2", keyOffset: 2, startOffsetHours: -46, durationHours: 1 },
+    { sessionType: "Qualifying", keyOffset: 3, startOffsetHours: -24, durationHours: 1 },
+    { sessionType: "Race", keyOffset: 4, startOffsetHours: 0, durationHours: 2 },
+] as const
+
+const shiftIsoDate = (date: string, offsetHours: number) => {
+    const timestamp = new Date(date).getTime() + offsetHours * 60 * 60 * 1000
+
+    return new Date(timestamp).toISOString()
+}
+
+export const mockSessions: SessionListItemWithFlagImage[] = raceSessions.flatMap((meeting) =>
+    sessionVariants.map((variant) => {
+        const dateStart = meeting.dateStart
+            ? shiftIsoDate(meeting.dateStart, variant.startOffsetHours)
+            : meeting.dateStart
+        const dateEnd = dateStart ? shiftIsoDate(dateStart, variant.durationHours) : meeting.dateEnd
+
+        return {
+            ...meeting,
+            sessionKey: meeting.sessionKey * 10 + variant.keyOffset,
+            sessionType: variant.sessionType,
+            dateStart,
+            dateEnd,
+        }
+    }),
+)
