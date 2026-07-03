@@ -7,8 +7,8 @@ type TrackPreviewProps = {
     track: TrackFeature
 }
 
-const VIEWBOX_WIDTH = 140
-const VIEWBOX_HEIGHT = 90
+const VIEWBOX_WIDTH = 180
+const VIEWBOX_HEIGHT = 120
 
 export const TrackPreview = ({ track }: TrackPreviewProps) => {
     const projection = geoMercator().fitSize([VIEWBOX_WIDTH, VIEWBOX_HEIGHT], track)
@@ -23,7 +23,7 @@ export const TrackPreview = ({ track }: TrackPreviewProps) => {
     return (
         <svg
             viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-            className="text-muted-foreground h-24 w-36"
+            className="text-muted-foreground h-32 w-44"
             fill="none"
             aria-hidden
         >
@@ -36,7 +36,7 @@ export const TrackPreview = ({ track }: TrackPreviewProps) => {
                 strokeLinejoin="round"
                 strokeDasharray={1}
                 strokeDashoffset={1}
-                className="animate-[draw-track_900ms_ease-out_forwards]"
+                className="animate-[draw-track_1800ms_ease-out_forwards]"
             />
         </svg>
     )
