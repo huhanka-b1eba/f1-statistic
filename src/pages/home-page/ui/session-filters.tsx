@@ -1,6 +1,21 @@
+import { SearchIcon } from "lucide-react"
+
 import { Input } from "@shared/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/ui/select"
-import { SearchIcon } from "lucide-react"
+
+const yearOptions = [
+    { label: "All", value: "all" },
+    { label: "2026", value: "2026" },
+    { label: "2025", value: "2025" },
+    { label: "2024", value: "2024" },
+    { label: "2023", value: "2023" },
+] as const
+
+const sessionNameOptions = [
+    { label: "All Sessions", value: "all" },
+    { label: "Race", value: "Race" },
+    { label: "Qualifying", value: "Qualifying" },
+] as const
 
 type SessionFiltersProps = {
     year: string
@@ -29,11 +44,15 @@ export const SessionFilters = ({
                 <div className="w-32">
                     <Select value={year} onValueChange={onYearChange}>
                         <SelectTrigger className="w-full rounded-sm">
-                            <SelectValue placeholder="2024" />
+                            <SelectValue placeholder="All" />
                         </SelectTrigger>
+
                         <SelectContent>
-                            <SelectItem value="2024">2024</SelectItem>
-                            <SelectItem value="2023">2023</SelectItem>
+                            {yearOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -41,18 +60,22 @@ export const SessionFilters = ({
                 <div className="w-40">
                     <Select value={sessionName} onValueChange={onSessionNameChange}>
                         <SelectTrigger className="w-full rounded-sm">
-                            <SelectValue placeholder="All Races" />
+                            <SelectValue placeholder="All Sessions" />
                         </SelectTrigger>
+
                         <SelectContent>
-                            <SelectItem value="all">All Sessions</SelectItem>
-                            <SelectItem value="Race">Race</SelectItem>
-                            <SelectItem value="Qualifying">Qualifying</SelectItem>
+                            {sessionNameOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
 
                 <div className="relative w-72">
                     <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
+
                     <Input
                         id="session-search"
                         className="rounded-sm pl-8"
