@@ -1,20 +1,31 @@
+import { Link } from "react-router"
+
 import { CircuitTrackPreview } from "@entities/circuit"
 import { SessionCard } from "@entities/session"
-import type { SessionListItemWithFlagImage } from "../model/types"
+
+import type { SessionListItem } from "@shared/api/generated"
+import { getSessionRoute } from "@shared/config/routes"
 
 type SessionListProps = {
-    sessions: SessionListItemWithFlagImage[]
+    sessions: SessionListItem[]
+    meetingFlags: Record<number, string | undefined>
 }
 
-export const SessionList = ({ sessions }: SessionListProps) => {
+export const SessionList = ({ sessions, meetingFlags }: SessionListProps) => {
     return (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {sessions.map((session) => (
-                <SessionCard
+                <Link
                     key={session.sessionKey}
-                    {...session}
-                    trackPreview={<CircuitTrackPreview location={session.location} />}
-                />
+                    to={getSessionRoute(session.sessionKey)}
+                    className="focus-visible:ring-ring block focus-visible:ring-2 focus-visible:outline-none"
+                >
+                    <SessionCard
+                        {...session}
+                        flagImageUrl={meetingFlags[session.meetingKey]}
+                        trackPreview={<CircuitTrackPreview location={session.location} />}
+                    />
+                </Link>
             ))}
         </div>
     )
