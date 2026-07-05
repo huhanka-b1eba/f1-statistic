@@ -23,7 +23,7 @@ export const TrackPreview = ({ track }: TrackPreviewProps) => {
     return (
         <svg
             viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-            className="text-muted-foreground h-32 w-44"
+            className="text-muted-foreground h-52 w-80"
             fill="none"
             aria-hidden
         >
