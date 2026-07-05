@@ -1,5 +1,6 @@
 import { TrackPreview } from "./track-preview"
-import { getCircuitIdByLocation, getCircuitTrack } from "@entities/circuit"
+import { getCircuitIdByLocation } from "../model/get-circuit-id-by-location"
+import { getCircuitTrack } from "../model/get-circuit-track"
 
 type CircuitTrackPreviewProps = {
     location?: string | null

@@ -4,9 +4,9 @@ import type { UseMutationOptions } from "@tanstack/react-query"
 
 import { useMutation } from "@tanstack/react-query"
 
-import type { GetApiDashboardBySessionKeyError } from "../../types.gen"
+import type { GetApiDashboardBySessionKeyError } from "@shared/api/generated/types.gen.ts"
 
-import { getDashboardBySessionKey } from "../../requests/sessions/getDashboardBySessionKey.gen"
+import { getDashboardBySessionKey } from "@shared/api/generated/requests/sessions/getDashboardBySessionKey.gen.ts"
 
 type GetDashboardBySessionKeyHookData = Awaited<ReturnType<typeof getDashboardBySessionKey>>
 

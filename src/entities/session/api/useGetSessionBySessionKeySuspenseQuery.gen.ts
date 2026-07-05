@@ -4,9 +4,9 @@ import type { UseSuspenseQueryOptions } from "@tanstack/react-query"
 
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query"
 
-import type { GetApiSessionsBySessionKeyError } from "../../types.gen"
+import type { GetApiSessionsBySessionKeyError } from "@shared/api/generated/types.gen.ts"
 
-import { getSessionBySessionKey } from "../../requests/sessions/getSessionBySessionKey.gen"
+import { getSessionBySessionKey } from "@shared/api/generated/requests/sessions/getSessionBySessionKey.gen.ts"
 
 type GetSessionBySessionKeyHookData = Awaited<ReturnType<typeof getSessionBySessionKey>>
 

@@ -1,7 +1,7 @@
-import type { SessionListItem } from "@shared/api/generated"
+import type { SessionListItem } from "../model/types"
 import { Badge } from "@shared/ui/badge"
 import type { ReactNode } from "react"
-import { HighlightText } from "@pages/home-page/ui/highlight-text.tsx"
+import { HighlightText } from "@shared/ui/highlight-text"
 
 type SessionCardProps = SessionListItem & {
     flagImageUrl?: string

@@ -3,8 +3,8 @@ import { VirtuosoGrid } from "react-virtuoso"
 
 import { CircuitTrackPreview } from "@entities/circuit"
 import { SessionCard } from "@entities/session"
+import type { SessionListItem } from "@entities/session"
 
-import type { SessionListItem } from "@shared/api/generated"
 import { getSessionRoute } from "@shared/config/routes"
 
 type SessionListProps = {

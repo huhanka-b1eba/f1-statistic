@@ -4,9 +4,9 @@ import type { UseQueryOptions } from "@tanstack/react-query"
 
 import { queryOptions, useQuery } from "@tanstack/react-query"
 
-import type { GetApiSessionsError } from "../../types.gen"
+import type { GetApiSessionsError } from "@shared/api/generated/types.gen.ts"
 
-import { getSessions } from "../../requests/sessions/getSessions.gen"
+import { getSessions } from "@shared/api/generated/requests/sessions/getSessions.gen.ts"
 
 type GetSessionsHookData = Awaited<ReturnType<typeof getSessions>>
 
