@@ -8,12 +8,23 @@ const normalizeCircuitLocation = (value: string) => {
     return value.trim().toLowerCase()
 }
 
+const isCircuitLocationMatch = (circuit: CircuitLocation, location: string) => {
+    const circuitLocation = normalizeCircuitLocation(circuit.location)
+    const circuitName = normalizeCircuitLocation(circuit.name)
+
+    return (
+        circuitLocation === location ||
+        circuitName === location ||
+        circuitLocation.includes(location) ||
+        circuitName.includes(location)
+    )
+}
+
 export const getCircuitIdByLocation = (location: string) => {
     const normalizedLocation = normalizeCircuitLocation(location)
 
     return (
-        circuitLocations.find(
-            (circuit) => normalizeCircuitLocation(circuit.location) === normalizedLocation,
-        )?.id ?? null
+        circuitLocations.find((circuit) => isCircuitLocationMatch(circuit, normalizedLocation))
+            ?.id ?? null
     )
 }
