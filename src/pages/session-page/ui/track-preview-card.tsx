@@ -1,4 +1,4 @@
-import { CircuitTrackPreview } from "@entities/circuit"
+import { CircuitMap, CircuitTrackPreview } from "@entities/circuit"
 
 import type { SessionListItem } from "@shared/api/generated/types.gen"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
@@ -31,12 +31,12 @@ export const TrackPreviewCard = ({ session }: TrackPreviewCardProps) => {
                 <CardContent>
                     <TabsContent
                         value="svg"
-                        className="flex h-60 w-full items-center justify-center rounded-md"
+                        className="flex h-80 w-full items-center justify-center rounded-md"
                     >
                         <CircuitTrackPreview location={location} />
                     </TabsContent>
-                    <TabsContent value="map" className="h-60 w-full rounded-md">
-                        <div className="relative h-full w-full overflow-hidden rounded-md" />
+                    <TabsContent value="map" className="h-80 w-full rounded-md">
+                        <CircuitMap location={location} />
                     </TabsContent>
                 </CardContent>
             </Card>

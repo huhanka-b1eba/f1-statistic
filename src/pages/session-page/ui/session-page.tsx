@@ -156,7 +156,7 @@ const SessionPage = () => {
             <div className="mt-2 grid grid-cols-[420px_1fr] gap-6">
                 <SessionDetailsCard dashboard={dashboard} />
 
-                <div className="grid grid-rows-[360px_1fr] gap-6">
+                <div className="grid grid-rows-[440px_1fr] gap-6">
                     <TrackPreviewCard session={dashboard.session} />
                     <VirtualDriversCard drivers={dashboard.drivers} />
                 </div>
