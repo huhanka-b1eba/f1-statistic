@@ -5,7 +5,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@shared/ui/breadcrumb.tsx"
+} from "@shared/ui/breadcrumb"
 import { Link, useMatches } from "react-router"
 import { Fragment } from "react"
 

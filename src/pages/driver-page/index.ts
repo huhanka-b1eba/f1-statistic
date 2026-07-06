@@ -1,3 +1,3 @@
-import DriverPage from "./ui/driver-page.tsx"
+import DriverPage from "./ui/driver-page"
 
 export default DriverPage

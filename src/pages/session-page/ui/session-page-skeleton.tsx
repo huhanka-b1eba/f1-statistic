@@ -1,4 +1,4 @@
-import { Skeleton } from "@shared/ui/skeleton.tsx"
+import { Skeleton } from "@shared/ui/skeleton"
 
 export const SessionPageSkeleton = () => {
     return (

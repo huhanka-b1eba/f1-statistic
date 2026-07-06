@@ -1,3 +1,3 @@
-import AppHeader from "./ui/app-header.tsx"
+import AppHeader from "./ui/app-header"
 
 export default AppHeader

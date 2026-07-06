@@ -10,7 +10,7 @@ import { SessionNotFound } from "./session-not-found"
 import { SessionPageHeader } from "./session-page-header"
 import { TrackPreviewCard } from "./track-preview-card"
 import { VirtualDriversCard } from "./virtual-drivers-card"
-import { SessionPageSkeleton } from "@pages/session-page/ui/session-page-skeleton.tsx"
+import { SessionPageSkeleton } from "@pages/session-page/ui/session-page-skeleton"
 
 const isDashboardState = (value: unknown): value is DashboardState => {
     return (

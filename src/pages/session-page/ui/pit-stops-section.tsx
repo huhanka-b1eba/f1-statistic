@@ -1,9 +1,9 @@
 import { useState } from "react"
 
 import { getDriverLabel } from "@entities/driver"
-import type { PitStopDto } from "@shared/api/generated/types.gen.ts"
-import { formatShortTime } from "@shared/lib/date-format.ts"
-import { Button } from "@shared/ui/button.tsx"
+import type { PitStopDto } from "@shared/api/generated/types.gen"
+import { formatShortTime } from "@shared/lib/date-format"
+import { Button } from "@shared/ui/button"
 
 type PitStopsSectionProps = {
     pitStops: PitStopDto[]

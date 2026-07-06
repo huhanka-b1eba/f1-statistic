@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
 import { Separator } from "@shared/ui/separator"
 import { formatDateTime } from "@shared/lib/date-format"
 
-import { PitStopsSection } from "./pit-stops-section.tsx"
-import { RaceControlSection } from "./race-control-section.tsx"
+import { PitStopsSection } from "./pit-stops-section"
+import { RaceControlSection } from "./race-control-section"
 
 type SessionDetailsCardProps = {
     dashboard: DashboardState

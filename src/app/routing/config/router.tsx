@@ -4,7 +4,7 @@ import BaseLayout from "@app/layouts/base-layout"
 import HomePage from "@pages/home-page"
 import SessionPage from "@pages/session-page"
 import { APP_ROUTES, ROUTE_LABELS } from "@shared/config/routes"
-import DriverPage from "@pages/driver-page/ui/driver-page.tsx"
+import DriverPage from "@pages/driver-page/ui/driver-page"
 
 export const router = createBrowserRouter([
     {
