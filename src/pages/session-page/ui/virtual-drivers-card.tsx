@@ -1,6 +1,8 @@
 import type { ReactNode } from "react"
+import { Link } from "react-router"
 
 import type { DriverRow } from "@shared/api/generated/types.gen"
+import { getDriverRoute } from "@shared/config/routes"
 import { Badge } from "@shared/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
 
@@ -83,9 +85,10 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                         const hasHeadshot = Boolean(driver.driver?.headshotUrl)
 
                         return (
-                            <article
+                            <Link
                                 key={driver.driverNumber}
-                                className="bg-card hover:bg-muted/30 overflow-hidden rounded-lg border border-l-4 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                                to={getDriverRoute(driver.driverNumber)}
+                                className="bg-card hover:bg-muted/30 block cursor-pointer overflow-hidden rounded-lg border border-l-4 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
                                 style={{
                                     borderLeftColor: teamColor,
                                 }}
@@ -183,7 +186,7 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                         </div>
                                     </div>
                                 </div>
-                            </article>
+                            </Link>
                         )
                     })}
                 </div>
