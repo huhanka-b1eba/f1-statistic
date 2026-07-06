@@ -55,19 +55,11 @@ h2 {
         font-size: 20px;
     }
 }
-code,
-.counter {
-    font-family: var(--mono);
-    display: inline-flex;
-    border-radius: 4px;
-    color: var(--text-h);
-}
 
-code {
-    font-size: 15px;
-    line-height: 135%;
-    padding: 4px 8px;
-    background: var(--code-bg);
+@keyframes draw-track {
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 @layer base {
