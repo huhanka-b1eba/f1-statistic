@@ -11,6 +11,5 @@ export default apicraft([
             name: "axios",
             runtimeInstancePath: "src/shared/api/api-client",
         },
-        plugins: ["tanstack"],
     },
 ])

@@ -10,19 +10,15 @@ export const useSessionFilters = () => {
     const yearNumber = year === "all" ? undefined : Number(year)
 
     const sessionsQuery = useGetSessionsQuery({
-        request: {
-            query: {
-                year: yearNumber,
-                sessionName: sessionName === "all" ? undefined : sessionName,
-            },
+        query: {
+            year: yearNumber,
+            sessionName: sessionName === "all" ? undefined : sessionName,
         },
     })
 
     const meetingsQuery = useGetMeetingsQuery({
-        request: {
-            query: {
-                year: yearNumber,
-            },
+        query: {
+            year: yearNumber,
         },
     })
 
