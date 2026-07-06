@@ -7,14 +7,14 @@ import {
     type GetMeetingsRequestParams,
 } from "@shared/api/generated/requests/sessions/getMeetings.gen"
 import {
-    getDashboardBySessionKey,
-    type GetDashboardBySessionKeyRequestParams,
-} from "@shared/api/generated/requests/sessions/getDashboardBySessionKey.gen"
+    getSessionBySessionKeyDashboard,
+    type GetSessionBySessionKeyDashboardRequestParams,
+} from "@shared/api/generated/requests/sessions/getSessionBySessionKeyDashboard.gen"
 
 import type {
     GetApiSessionsError,
     GetApiMeetingsError,
-    GetApiDashboardBySessionKeyError,
+    GetApiSessionsBySessionKeyDashboardError,
 } from "@shared/api/generated/types.gen"
 
 import { createQuery } from "@shared/api/lib/create-query"
@@ -23,7 +23,7 @@ import { sessionQueryKeys } from "./query-key"
 
 type SessionsData = Awaited<ReturnType<typeof getSessions>>
 type MeetingsData = Awaited<ReturnType<typeof getMeetings>>
-type DashboardData = Awaited<ReturnType<typeof getDashboardBySessionKey>>
+type DashboardData = Awaited<ReturnType<typeof getSessionBySessionKeyDashboard>>
 
 const sessionsQuery = createQuery<
     GetSessionsRequestParams | undefined,
@@ -44,12 +44,12 @@ const meetingsQuery = createQuery<
 })
 
 const dashboardQuery = createQuery<
-    GetDashboardBySessionKeyRequestParams,
+    GetSessionBySessionKeyDashboardRequestParams,
     DashboardData,
-    GetApiDashboardBySessionKeyError
+    GetApiSessionsBySessionKeyDashboardError
 >({
     queryKey: (request) => sessionQueryKeys.dashboard(request.path.sessionKey),
-    queryFn: getDashboardBySessionKey,
+    queryFn: getSessionBySessionKeyDashboard,
 })
 
 export const getSessionsQueryOptions = sessionsQuery.getQueryOptions

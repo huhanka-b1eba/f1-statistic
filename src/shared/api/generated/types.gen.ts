@@ -330,6 +330,9 @@ export type DashboardState = {
     drivers: Array<DriverRow>
     pitStops: Array<PitStopDto>
     raceControl: Array<RaceControlMessageDto>
+    /**
+     * How this response's required datasets were resolved: in-memory cache, SQLite, or a fresh OpenF1 fetch for this request.
+     */
     dataSource: "cache" | "database" | "api"
     replay?: ReplayState
 }
@@ -865,7 +868,7 @@ export type GetApiSessionsBySessionKeyCompareTelemetryResponses = {
 export type GetApiSessionsBySessionKeyCompareTelemetryResponse =
     GetApiSessionsBySessionKeyCompareTelemetryResponses[keyof GetApiSessionsBySessionKeyCompareTelemetryResponses]
 
-export type GetApiDashboardBySessionKeyData = {
+export type GetApiSessionsBySessionKeyDashboardData = {
     body?: never
     path: {
         /**
@@ -874,28 +877,28 @@ export type GetApiDashboardBySessionKeyData = {
         sessionKey: number
     }
     query?: never
-    url: "/api/dashboard/{sessionKey}"
+    url: "/api/sessions/{sessionKey}/dashboard"
 }
 
-export type GetApiDashboardBySessionKeyErrors = {
+export type GetApiSessionsBySessionKeyDashboardErrors = {
     /**
      * Error response
      */
     500: ErrorResponse
 }
 
-export type GetApiDashboardBySessionKeyError =
-    GetApiDashboardBySessionKeyErrors[keyof GetApiDashboardBySessionKeyErrors]
+export type GetApiSessionsBySessionKeyDashboardError =
+    GetApiSessionsBySessionKeyDashboardErrors[keyof GetApiSessionsBySessionKeyDashboardErrors]
 
-export type GetApiDashboardBySessionKeyResponses = {
+export type GetApiSessionsBySessionKeyDashboardResponses = {
     /**
      * Aggregated dashboard state.
      */
     200: DashboardState
 }
 
-export type GetApiDashboardBySessionKeyResponse =
-    GetApiDashboardBySessionKeyResponses[keyof GetApiDashboardBySessionKeyResponses]
+export type GetApiSessionsBySessionKeyDashboardResponse =
+    GetApiSessionsBySessionKeyDashboardResponses[keyof GetApiSessionsBySessionKeyDashboardResponses]
 
 export type PostApiSessionsBySessionKeySyncData = {
     body?: never

@@ -80,6 +80,7 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                 <div className="space-y-3">
                     {drivers.map((driver) => {
                         const teamColor = getTeamColor(driver)
+                        const hasHeadshot = Boolean(driver.driver?.headshotUrl)
 
                         return (
                             <article
@@ -89,11 +90,17 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                     borderLeftColor: teamColor,
                                 }}
                             >
-                                <div className="grid gap-6 xl:grid-cols-[72px_minmax(320px,1fr)_380px] xl:items-center">
-                                    <div className="bg-muted/60 border-border flex size-18 items-end justify-center overflow-hidden rounded-md border">
-                                        {driver.driver?.headshotUrl ? (
+                                <div className="grid gap-6 xl:grid-cols-[96px_minmax(320px,1fr)_380px] xl:items-center">
+                                    <div
+                                        className={
+                                            hasHeadshot
+                                                ? "flex size-24 items-end justify-center overflow-hidden rounded-md"
+                                                : "bg-muted/60 border-border flex size-24 items-end justify-center overflow-hidden rounded-md border"
+                                        }
+                                    >
+                                        {hasHeadshot ? (
                                             <img
-                                                src={driver.driver.headshotUrl}
+                                                src={driver.driver?.headshotUrl ?? ""}
                                                 alt=""
                                                 className="h-full w-full object-cover object-top"
                                                 loading="lazy"

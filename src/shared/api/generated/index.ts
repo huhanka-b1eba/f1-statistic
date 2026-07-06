@@ -16,5 +16,5 @@ export * from "./requests/drivers/getSessionBySessionKeyDriverByDriverNumberStin
 export * from "./requests/drivers/getSessionBySessionKeyDriverByDriverNumberPitStops.gen"
 export * from "./requests/compare/getSessionBySessionKeyCompare.gen"
 export * from "./requests/compare/getSessionBySessionKeyCompareTelemetry.gen"
-export * from "./requests/sessions/getDashboardBySessionKey.gen"
+export * from "./requests/sessions/getSessionBySessionKeyDashboard.gen"
 export * from "./requests/sessions/postSessionBySessionKeySync.gen"

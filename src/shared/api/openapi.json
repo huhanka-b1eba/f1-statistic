@@ -833,7 +833,7 @@
                 }
             }
         },
-        "/api/dashboard/{sessionKey}": {
+        "/api/sessions/{sessionKey}/dashboard": {
             "get": {
                 "tags": ["Sessions"],
                 "summary": "Get dashboard state for a session",
@@ -2218,7 +2218,8 @@
                     },
                     "dataSource": {
                         "type": "string",
-                        "enum": ["cache", "database", "api"]
+                        "enum": ["cache", "database", "api"],
+                        "description": "How this response's required datasets were resolved: in-memory cache, SQLite, or a fresh OpenF1 fetch for this request."
                     },
                     "replay": {
                         "$ref": "#/components/schemas/ReplayState"
