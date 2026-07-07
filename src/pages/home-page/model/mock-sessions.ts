@@ -1,4 +1,4 @@
-import type { SessionListItemWithFlagImage } from "./types.ts"
+import type { SessionListItemWithFlagImage } from "./types"
 
 const raceSessions: SessionListItemWithFlagImage[] = [
     {

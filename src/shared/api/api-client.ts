@@ -1,7 +1,7 @@
 import * as axios from "axios"
 import type { AxiosError, InternalAxiosRequestConfig } from "axios"
-import { delay } from "@shared/lib/utils.ts"
-import { showAlert } from "@shared/lib/alert-store.ts"
+import { delay } from "@shared/lib/utils"
+import { showAlert } from "@shared/lib/alert-store"
 
 type RetryConfig = InternalAxiosRequestConfig & {
     retryCount?: number
