@@ -2,6 +2,7 @@ import type { SessionListItem } from "../model/types"
 import { Badge } from "@shared/ui/badge"
 import type { ReactNode } from "react"
 import { HighlightText } from "@shared/ui/highlight-text"
+import { TypographyH3, TypographyMuted } from "@shared/ui/typography"
 
 type SessionCardProps = SessionListItem & {
     flagImageUrl?: string
@@ -52,24 +53,24 @@ const SessionCard = ({
                         )}
                     </div>
 
-                    <p className="text-muted-foreground text-sm leading-none font-semibold">
+                    <TypographyMuted className="leading-none font-semibold">
                         {sessionType}
-                    </p>
+                    </TypographyMuted>
 
-                    <h3 className="mt-2 mb-1 text-base leading-tight font-bold break-words">
+                    <TypographyH3 className="mt-2 mb-1 text-base leading-tight font-bold break-words">
                         <HighlightText text={sessionName} query={highlightQuery} />
-                    </h3>
+                    </TypographyH3>
 
                     {circuitShortName && (
-                        <p className="text-muted-foreground text-sm leading-tight font-medium break-words">
+                        <TypographyMuted className="leading-tight font-medium break-words">
                             <HighlightText text={circuitShortName} query={highlightQuery} />
-                        </p>
+                        </TypographyMuted>
                     )}
 
                     {dateRange && (
-                        <p className="text-muted-foreground mt-1 text-xs leading-tight font-semibold">
+                        <TypographyMuted className="mt-1 text-xs leading-tight font-semibold">
                             {dateRange}
-                        </p>
+                        </TypographyMuted>
                     )}
 
                     <div className="mt-auto flex items-center gap-2 pt-3">

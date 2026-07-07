@@ -2,9 +2,10 @@ import { useMemo } from "react"
 
 import { getDriverShortName } from "@entities/driver"
 import type { DashboardState } from "@shared/api/generated/types.gen"
+import { formatDateTime } from "@shared/lib/date-format"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
 import { Separator } from "@shared/ui/separator"
-import { formatDateTime } from "@shared/lib/date-format"
+import { TypographyLarge, TypographyMuted } from "@shared/ui/typography"
 
 import { PitStopsSection } from "./pit-stops-section"
 import { RaceControlSection } from "./race-control-section"
@@ -36,10 +37,12 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
                 <div className="grid grid-cols-2 gap-x-8 gap-y-6">
                     {sessionStats.map((stat) => (
                         <div key={stat.label}>
-                            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                            <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
                                 {stat.label}
-                            </p>
-                            <p className="mt-1 text-base font-semibold">{stat.value}</p>
+                            </TypographyMuted>
+                            <TypographyLarge className="mt-1 text-base">
+                                {stat.value}
+                            </TypographyLarge>
                         </div>
                     ))}
                 </div>
@@ -48,9 +51,9 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
-                        <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
                             Status
-                        </p>
+                        </TypographyMuted>
                         <div className="mt-2 flex items-center justify-center">
                             <span className="text-xl leading-none font-semibold capitalize">
                                 {dashboard.sessionStatus ?? "-"}
@@ -59,12 +62,12 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
                     </div>
 
                     <div className="text-center">
-                        <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
                             Drivers
-                        </p>
-                        <p className="mt-1 text-2xl leading-none font-semibold">
+                        </TypographyMuted>
+                        <TypographyLarge className="mt-1 text-2xl leading-none">
                             {dashboard.drivers.length}
-                        </p>
+                        </TypographyLarge>
                     </div>
                 </div>
 

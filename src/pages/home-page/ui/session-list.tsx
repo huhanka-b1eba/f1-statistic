@@ -6,6 +6,7 @@ import { SessionCard } from "@entities/session"
 import type { SessionListItem } from "@entities/session"
 
 import { getSessionRoute } from "@shared/config/routes"
+import { TypographyMuted } from "@shared/ui/typography"
 
 type SessionListProps = {
     search: string
@@ -15,7 +16,7 @@ type SessionListProps = {
 
 export const SessionList = ({ sessions, meetingFlags, search }: SessionListProps) => {
     if (sessions.length === 0) {
-        return <p className="text-muted-foreground text-left">Sessions not found</p>
+        return <TypographyMuted className="text-left">Sessions not found</TypographyMuted>
     }
 
     return (

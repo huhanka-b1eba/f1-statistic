@@ -2,6 +2,7 @@ import { SearchIcon } from "lucide-react"
 
 import { Input } from "@shared/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/ui/select"
+import { TypographyH2 } from "@shared/ui/typography"
 
 const yearOptions = [
     { label: "All", value: "all" },
@@ -37,7 +38,7 @@ export const SessionFilters = ({
     return (
         <div className="mb-4">
             <div className="mb-3 text-left">
-                <h2 className="m-0 text-lg font-semibold">Select a session</h2>
+                <TypographyH2 className="m-0 text-lg">Select a session</TypographyH2>
             </div>
 
             <div className="flex gap-3">

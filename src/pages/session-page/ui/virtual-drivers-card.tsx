@@ -6,6 +6,7 @@ import type { DriverRow } from "@shared/api/generated/types.gen"
 import { getDriverRoute } from "@shared/config/routes"
 import { Badge } from "@shared/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
+import { TypographyH3, TypographyLarge, TypographyMuted, TypographyP } from "@shared/ui/typography"
 
 type VirtualDriversCardProps = {
     drivers: DriverRow[]
@@ -53,12 +54,12 @@ const getDriverInitials = (driver: DriverRow) => {
 const StatItem = ({ label, children }: StatItemProps) => {
     return (
         <div className="min-w-0">
-            <p className="text-muted-foreground text-xs leading-none font-medium tracking-wide uppercase">
+            <TypographyMuted className="text-xs leading-none font-medium tracking-wide uppercase">
                 {label}
-            </p>
-            <div className="mt-2 truncate font-mono text-lg leading-none font-semibold whitespace-nowrap">
+            </TypographyMuted>
+            <TypographyLarge className="mt-2 truncate font-mono leading-none whitespace-nowrap">
                 {children}
-            </div>
+            </TypographyLarge>
         </div>
     )
 }
@@ -70,9 +71,9 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <CardTitle>Drivers</CardTitle>
-                        <p className="text-muted-foreground mt-1 text-sm">
+                        <TypographyMuted className="mt-1">
                             Position, lap, sectors and tyre state
-                        </p>
+                        </TypographyMuted>
                     </div>
 
                     <Badge variant="secondary">{drivers.length} drivers</Badge>
@@ -143,13 +144,13 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                                 )}
                                             </div>
 
-                                            <h3 className="mt-2 truncate text-lg leading-tight font-semibold">
+                                            <TypographyH3 className="mt-2 truncate text-lg leading-tight">
                                                 {getDriverName(driver)}
-                                            </h3>
+                                            </TypographyH3>
 
-                                            <p className="text-muted-foreground mt-1 truncate font-mono text-sm">
+                                            <TypographyMuted className="mt-1 truncate font-mono">
                                                 Gap: {formatGap(driver.gapToLeader)}
-                                            </p>
+                                            </TypographyMuted>
                                         </div>
 
                                         <div className="grid grid-cols-[120px_minmax(220px,1fr)] gap-x-6 gap-y-4">
@@ -162,23 +163,31 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                             </StatItem>
 
                                             <StatItem label="Tyre">
-                                                <p>{driver.compound ?? "-"}</p>
-                                                <p className="text-muted-foreground text-base">
+                                                <TypographyP className="leading-none">
+                                                    {driver.compound ?? "-"}
+                                                </TypographyP>
+                                                <TypographyP className="text-muted-foreground text-base leading-none">
                                                     {driver.tyreAge != null
                                                         ? `${driver.tyreAge} laps`
                                                         : "-"}
-                                                </p>
+                                                </TypographyP>
                                             </StatItem>
 
                                             <div className="min-w-0">
-                                                <p className="text-muted-foreground text-xs leading-none font-medium tracking-wide uppercase">
+                                                <TypographyMuted className="text-xs leading-none font-medium tracking-wide uppercase">
                                                     Sectors
-                                                </p>
+                                                </TypographyMuted>
 
                                                 <div className="mt-2 min-w-0 space-y-1 overflow-hidden font-mono text-lg leading-none font-semibold">
-                                                    <p>{formatSeconds(driver.sectors.sector1)}</p>
-                                                    <p>{formatSeconds(driver.sectors.sector2)}</p>
-                                                    <p>{formatSeconds(driver.sectors.sector3)}</p>
+                                                    <TypographyP className="leading-none">
+                                                        {formatSeconds(driver.sectors.sector1)}
+                                                    </TypographyP>
+                                                    <TypographyP className="leading-none">
+                                                        {formatSeconds(driver.sectors.sector2)}
+                                                    </TypographyP>
+                                                    <TypographyP className="leading-none">
+                                                        {formatSeconds(driver.sectors.sector3)}
+                                                    </TypographyP>
                                                 </div>
                                             </div>
                                         </div>
