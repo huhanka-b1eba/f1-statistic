@@ -12,7 +12,6 @@ type PitStopsSectionProps = {
 
 type PitStopRowProps = {
     pitStop: PitStopDto
-    index: number
     driverNamesByNumber: Map<number, string>
 }
 
@@ -32,14 +31,23 @@ const formatPitStopDetails = (pitStop: PitStopDto) => {
     return details.join(" · ")
 }
 
-const PitStopRow = ({ pitStop, index, driverNamesByNumber }: PitStopRowProps) => {
+const getPitStopKey = (pitStop: PitStopDto) => {
+    return [
+        pitStop.driverNumber,
+        pitStop.date,
+        pitStop.lapNumber,
+        pitStop.stopDuration,
+        pitStop.laneDuration,
+    ]
+        .filter((value) => value != null && value !== "")
+        .join("-")
+}
+
+const PitStopRow = ({ pitStop, driverNamesByNumber }: PitStopRowProps) => {
     const driverLabel = getDriverLabel(pitStop.driverNumber, driverNamesByNumber)
 
     return (
-        <div
-            key={`${pitStop.driverNumber}-${pitStop.date}-${index}`}
-            className="grid grid-cols-[84px_1fr_auto] items-center gap-3 rounded-sm py-1 text-sm"
-        >
+        <div className="grid grid-cols-[84px_1fr_auto] items-center gap-3 rounded-sm py-1 text-sm">
             <span className="truncate font-mono font-semibold">{driverLabel}</span>
             <span className="text-muted-foreground truncate">{formatPitStopDetails(pitStop)}</span>
             <span className="text-muted-foreground font-mono text-xs">
@@ -68,11 +76,10 @@ export const PitStopsSection = ({ pitStops, driverNamesByNumber }: PitStopsSecti
             {pitStops.length > 0 ? (
                 <>
                     <div className="mt-3 space-y-1">
-                        {visiblePitStops.map((pitStop, index) => (
+                        {visiblePitStops.map((pitStop) => (
                             <PitStopRow
-                                key={`${pitStop.driverNumber}-${pitStop.date}-${index}`}
+                                key={getPitStopKey(pitStop)}
                                 pitStop={pitStop}
-                                index={index}
                                 driverNamesByNumber={driverNamesByNumber}
                             />
                         ))}

@@ -104,7 +104,7 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                             {hasHeadshot ? (
                                                 <img
                                                     src={driver.driver?.headshotUrl ?? ""}
-                                                    alt=""
+                                                    alt={`${getDriverName(driver)}'s headshot`}
                                                     className="h-full w-full object-cover object-top"
                                                     loading="lazy"
                                                 />
@@ -162,14 +162,12 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                             </StatItem>
 
                                             <StatItem label="Tyre">
-                                                <span className="block">
-                                                    {driver.compound ?? "-"}
-                                                </span>
-                                                <span className="text-muted-foreground block text-base">
+                                                <p>{driver.compound ?? "-"}</p>
+                                                <p className="text-muted-foreground text-base">
                                                     {driver.tyreAge != null
                                                         ? `${driver.tyreAge} laps`
                                                         : "-"}
-                                                </span>
+                                                </p>
                                             </StatItem>
 
                                             <div className="min-w-0">
@@ -178,15 +176,9 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                                                 </p>
 
                                                 <div className="mt-2 min-w-0 space-y-1 overflow-hidden font-mono text-lg leading-none font-semibold">
-                                                    <span className="block">
-                                                        {formatSeconds(driver.sectors.sector1)}
-                                                    </span>
-                                                    <span className="block">
-                                                        {formatSeconds(driver.sectors.sector2)}
-                                                    </span>
-                                                    <span className="block">
-                                                        {formatSeconds(driver.sectors.sector3)}
-                                                    </span>
+                                                    <p>{formatSeconds(driver.sectors.sector1)}</p>
+                                                    <p>{formatSeconds(driver.sectors.sector2)}</p>
+                                                    <p>{formatSeconds(driver.sectors.sector3)}</p>
                                                 </div>
                                             </div>
                                         </div>

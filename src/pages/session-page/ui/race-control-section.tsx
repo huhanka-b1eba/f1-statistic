@@ -12,17 +12,29 @@ type RaceControlSectionProps = {
 
 type RaceControlRowProps = {
     message: RaceControlMessageDto
-    index: number
     driverNamesByNumber: Map<number, string>
 }
 
 const DEFAULT_VISIBLE_ITEMS = 3
 
-const RaceControlRow = ({ message, index, driverNamesByNumber }: RaceControlRowProps) => {
+const getRaceControlMessageKey = (message: RaceControlMessageDto) => {
+    return [
+        message.date,
+        message.category,
+        message.flag,
+        message.driverNumber,
+        message.lapNumber,
+        message.message,
+    ]
+        .filter((value) => value != null && value !== "")
+        .join("-")
+}
+
+const RaceControlRow = ({ message, driverNamesByNumber }: RaceControlRowProps) => {
     const driverLabel = getDriverLabel(message.driverNumber, driverNamesByNumber)
 
     return (
-        <div key={`${message.date}-${message.category}-${index}`} className="text-sm leading-5">
+        <div className="text-sm leading-5">
             <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
                 <span className="font-mono">{formatShortTime(message.date)}</span>
                 <span>{message.category}</span>
@@ -54,11 +66,10 @@ export const RaceControlSection = ({ messages, driverNamesByNumber }: RaceContro
             {messages.length > 0 ? (
                 <>
                     <div className="mt-3 space-y-2">
-                        {visibleMessages.map((message, index) => (
+                        {visibleMessages.map((message) => (
                             <RaceControlRow
-                                key={`${message.date}-${message.category}-${index}`}
+                                key={getRaceControlMessageKey(message)}
                                 message={message}
-                                index={index}
                                 driverNamesByNumber={driverNamesByNumber}
                             />
                         ))}
