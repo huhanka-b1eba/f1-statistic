@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import { cn } from "@shared/lib/utils"
 import { Button } from "@shared/ui/button"
-import { TypographyLarge, TypographyMuted } from "@shared/ui/typography"
+import { Typography } from "@shared/ui/typography"
 
 type ExpandableListSectionProps<TItem> = {
     items: TItem[]
@@ -48,12 +48,15 @@ export const ExpandableListSection = <TItem,>({
         <div className={className}>
             {title && (
                 <div className={cn("flex items-baseline justify-between gap-4", headerClassName)}>
-                    <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
+                    <Typography
+                        variant="muted"
+                        className="text-xs font-medium tracking-wide uppercase"
+                    >
                         {title}
-                    </TypographyMuted>
-                    <TypographyLarge className="font-mono leading-none">
+                    </Typography>
+                    <Typography variant="large" className="font-mono leading-none">
                         {items.length}
-                    </TypographyLarge>
+                    </Typography>
                 </div>
             )}
 
@@ -83,9 +86,9 @@ export const ExpandableListSection = <TItem,>({
                     )}
                 </>
             ) : emptyMessage ? (
-                <TypographyMuted className={cn("mt-2", emptyClassName)}>
+                <Typography variant="muted" className={cn("mt-2", emptyClassName)}>
                     {emptyMessage}
-                </TypographyMuted>
+                </Typography>
             ) : null}
         </div>
     )

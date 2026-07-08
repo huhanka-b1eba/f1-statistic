@@ -1,4 +1,4 @@
-import type { ComponentProps, ComponentPropsWithoutRef, ElementType, ReactNode } from "react"
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react"
 
 import { cn } from "@shared/lib/utils"
 
@@ -18,11 +18,24 @@ const typographyVariants = {
 
 type TypographyVariant = keyof typeof typographyVariants
 
+const typographyDefaultTags = {
+    h1: "h1",
+    h2: "h2",
+    h3: "h3",
+    h4: "h4",
+    p: "p",
+    muted: "p",
+    lead: "p",
+    small: "small",
+    large: "div",
+    blockquote: "blockquote",
+    inlineCode: "code",
+} as const satisfies Record<TypographyVariant, ElementType>
+
 type TypographyProps<TComponent extends ElementType> = {
     as?: TComponent
     children?: ReactNode
     className?: string
-    text?: ReactNode
     variant?: TypographyVariant
 } & Omit<ComponentPropsWithoutRef<TComponent>, "as" | "children" | "className">
 
@@ -30,59 +43,14 @@ export const Typography = <TElement extends ElementType = "p">({
     as,
     children,
     className,
-    text,
     variant = "p",
     ...props
 }: TypographyProps<TElement>) => {
-    const Component = as ?? "p"
+    const Component = as ?? typographyDefaultTags[variant]
 
     return (
         <Component className={cn(typographyVariants[variant], className)} {...props}>
-            {text ?? children}
+            {children}
         </Component>
     )
-}
-
-export const TypographyH1 = (props: ComponentProps<"h1">) => {
-    return <Typography as="h1" variant="h1" {...props} />
-}
-
-export const TypographyH2 = (props: ComponentProps<"h2">) => {
-    return <Typography as="h2" variant="h2" {...props} />
-}
-
-export const TypographyH3 = (props: ComponentProps<"h3">) => {
-    return <Typography as="h3" variant="h3" {...props} />
-}
-
-export const TypographyH4 = (props: ComponentProps<"h4">) => {
-    return <Typography as="h4" variant="h4" {...props} />
-}
-
-export const TypographyP = (props: ComponentProps<"p">) => {
-    return <Typography as="p" variant="p" {...props} />
-}
-
-export const TypographyMuted = (props: ComponentProps<"p">) => {
-    return <Typography as="p" variant="muted" {...props} />
-}
-
-export const TypographyLead = (props: ComponentProps<"p">) => {
-    return <Typography as="p" variant="lead" {...props} />
-}
-
-export const TypographySmall = (props: ComponentProps<"small">) => {
-    return <Typography as="small" variant="small" {...props} />
-}
-
-export const TypographyLarge = (props: ComponentProps<"div">) => {
-    return <Typography as="div" variant="large" {...props} />
-}
-
-export const TypographyBlockquote = (props: ComponentProps<"blockquote">) => {
-    return <Typography as="blockquote" variant="blockquote" {...props} />
-}
-
-export const TypographyInlineCode = (props: ComponentProps<"code">) => {
-    return <Typography as="code" variant="inlineCode" {...props} />
 }

@@ -3,7 +3,7 @@ import { CircuitMap, CircuitTrackPreview } from "@entities/circuit"
 import type { SessionListItem } from "@shared/api/generated/types.gen"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/ui/tabs"
-import { TypographyMuted } from "@shared/ui/typography"
+import { Typography } from "@shared/ui/typography"
 
 type TrackPreviewCardProps = {
     session: SessionListItem
@@ -19,9 +19,9 @@ export const TrackPreviewCard = ({ session }: TrackPreviewCardProps) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle>Track Preview</CardTitle>
-                            <TypographyMuted className="mt-1">
+                            <Typography variant="muted" className="mt-1">
                                 {session.circuitShortName ?? location}
-                            </TypographyMuted>
+                            </Typography>
                         </div>
                         <TabsList aria-label="Track preview type">
                             <TabsTrigger value="svg">SVG</TabsTrigger>

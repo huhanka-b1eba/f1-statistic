@@ -5,7 +5,7 @@ import type { DashboardState } from "@shared/api/generated/types.gen"
 import { formatDateTime, getDateTimeAttribute } from "@shared/lib/date-format"
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card"
 import { Separator } from "@shared/ui/separator"
-import { Typography, TypographyLarge, TypographyMuted } from "@shared/ui/typography"
+import { Typography } from "@shared/ui/typography"
 
 import { PitStopsSection } from "./pit-stops-section"
 import { RaceControlSection } from "./race-control-section"
@@ -45,9 +45,12 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
                 <div className="grid grid-cols-2 gap-x-8 gap-y-6">
                     {sessionStats.map((stat) => (
                         <div key={stat.label}>
-                            <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
+                            <Typography
+                                variant="muted"
+                                className="text-xs font-medium tracking-wide uppercase"
+                            >
                                 {stat.label}
-                            </TypographyMuted>
+                            </Typography>
                             {stat.dateTime ? (
                                 <Typography
                                     as="time"
@@ -58,9 +61,9 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
                                     {stat.value}
                                 </Typography>
                             ) : (
-                                <TypographyLarge className="mt-1 text-base">
+                                <Typography variant="large" className="mt-1 text-base">
                                     {stat.value}
-                                </TypographyLarge>
+                                </Typography>
                             )}
                         </div>
                     ))}
@@ -70,9 +73,12 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
-                        <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
+                        <Typography
+                            variant="muted"
+                            className="text-xs font-medium tracking-wide uppercase"
+                        >
                             Status
-                        </TypographyMuted>
+                        </Typography>
                         <div className="mt-2 flex items-center justify-center">
                             <span className="text-xl leading-none font-semibold capitalize">
                                 {dashboard.sessionStatus ?? "-"}
@@ -81,12 +87,15 @@ export const SessionDetailsCard = ({ dashboard }: SessionDetailsCardProps) => {
                     </div>
 
                     <div className="text-center">
-                        <TypographyMuted className="text-xs font-medium tracking-wide uppercase">
+                        <Typography
+                            variant="muted"
+                            className="text-xs font-medium tracking-wide uppercase"
+                        >
                             Drivers
-                        </TypographyMuted>
-                        <TypographyLarge className="mt-1 text-2xl leading-none">
+                        </Typography>
+                        <Typography variant="large" className="mt-1 text-2xl leading-none">
                             {dashboard.drivers.length}
-                        </TypographyLarge>
+                        </Typography>
                     </div>
                 </div>
 

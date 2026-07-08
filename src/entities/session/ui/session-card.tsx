@@ -3,7 +3,7 @@ import { Badge } from "@shared/ui/badge"
 import type { ReactNode } from "react"
 import { HighlightText } from "@shared/ui/highlight-text"
 import { getDateTimeAttribute } from "@shared/lib/date-format"
-import { Typography, TypographyH3, TypographyMuted } from "@shared/ui/typography"
+import { Typography } from "@shared/ui/typography"
 
 type SessionCardProps = SessionListItem & {
     flagImageUrl?: string
@@ -62,18 +62,24 @@ const SessionCard = ({
                         )}
                     </div>
 
-                    <TypographyMuted className="leading-none font-semibold">
+                    <Typography variant="muted" className="leading-none font-semibold">
                         {sessionType}
-                    </TypographyMuted>
+                    </Typography>
 
-                    <TypographyH3 className="mt-2 mb-1 text-base leading-tight font-bold break-words">
+                    <Typography
+                        variant="h3"
+                        className="mt-2 mb-1 text-base leading-tight font-bold break-words"
+                    >
                         <HighlightText text={sessionName} query={highlightQuery} />
-                    </TypographyH3>
+                    </Typography>
 
                     {circuitShortName && (
-                        <TypographyMuted className="leading-tight font-medium break-words">
+                        <Typography
+                            variant="muted"
+                            className="leading-tight font-medium break-words"
+                        >
                             <HighlightText text={circuitShortName} query={highlightQuery} />
-                        </TypographyMuted>
+                        </Typography>
                     )}
 
                     {dateRange && (

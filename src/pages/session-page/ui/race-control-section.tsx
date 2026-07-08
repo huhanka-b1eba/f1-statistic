@@ -1,7 +1,7 @@
 import { getDriverLabel } from "@entities/driver"
 import type { RaceControlMessageDto } from "@shared/api/generated/types.gen"
 import { formatShortTime, getDateTimeAttribute } from "@shared/lib/date-format"
-import { Typography, TypographyP } from "@shared/ui/typography"
+import { Typography } from "@shared/ui/typography"
 
 import { ExpandableListSection } from "./expandable-list-section"
 
@@ -52,7 +52,9 @@ const RaceControlRow = ({ message, driverNamesByNumber }: RaceControlRowProps) =
                 {driverLabel && <span className="font-mono">{driverLabel}</span>}
                 {message.lapNumber && <span>lap {message.lapNumber}</span>}
             </div>
-            <TypographyP className="mt-0.5 leading-5">{message.message ?? "-"}</TypographyP>
+            <Typography variant="p" className="mt-0.5 leading-5">
+                {message.message ?? "-"}
+            </Typography>
         </div>
     )
 }
