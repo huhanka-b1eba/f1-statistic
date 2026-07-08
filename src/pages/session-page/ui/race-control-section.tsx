@@ -51,7 +51,8 @@ export const RaceControlSection = ({ messages, driverNamesByNumber }: RaceContro
             title="Race control"
             items={messages}
             emptyMessage="No race control messages"
-            itemClassName="mt-3 space-y-2"
+            className="rounded-md border p-3"
+            listClassName="mt-3 space-y-2"
             getItemKey={getRaceControlMessageKey}
             renderItem={(message) => (
                 <RaceControlRow message={message} driverNamesByNumber={driverNamesByNumber} />

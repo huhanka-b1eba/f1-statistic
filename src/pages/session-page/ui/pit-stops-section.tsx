@@ -60,7 +60,8 @@ export const PitStopsSection = ({ pitStops, driverNamesByNumber }: PitStopsSecti
             title="Pit stops"
             items={pitStops}
             emptyMessage="No pit stop data"
-            itemClassName="mt-3 space-y-1"
+            className="rounded-md border p-3"
+            listClassName="mt-3 space-y-1"
             getItemKey={getPitStopKey}
             renderItem={(pitStop) => (
                 <PitStopRow pitStop={pitStop} driverNamesByNumber={driverNamesByNumber} />
