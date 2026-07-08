@@ -1,3 +1,11 @@
+export const getDateTimeAttribute = (value?: string | null) => {
+    if (!value || Number.isNaN(new Date(value).getTime())) {
+        return undefined
+    }
+
+    return value
+}
+
 export const formatDateTime = (value?: string | null) => {
     if (!value) {
         return "-"

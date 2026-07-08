@@ -1,6 +1,7 @@
 import { getDriverLabel } from "@entities/driver"
 import type { PitStopDto } from "@shared/api/generated/types.gen"
-import { formatShortTime } from "@shared/lib/date-format"
+import { formatShortTime, getDateTimeAttribute } from "@shared/lib/date-format"
+import { Typography } from "@shared/ui/typography"
 
 import { ExpandableListSection } from "./expandable-list-section"
 
@@ -42,14 +43,26 @@ const getPitStopKey = (pitStop: PitStopDto) => {
 
 const PitStopRow = ({ pitStop, driverNamesByNumber }: PitStopRowProps) => {
     const driverLabel = getDriverLabel(pitStop.driverNumber, driverNamesByNumber)
+    const dateTime = getDateTimeAttribute(pitStop.date)
 
     return (
         <div className="grid grid-cols-[84px_1fr_auto] items-center gap-3 rounded-sm py-1 text-sm">
             <span className="truncate font-mono font-semibold">{driverLabel}</span>
             <span className="text-muted-foreground truncate">{formatPitStopDetails(pitStop)}</span>
-            <span className="text-muted-foreground font-mono text-xs">
-                {formatShortTime(pitStop.date)}
-            </span>
+            {dateTime ? (
+                <Typography
+                    as="time"
+                    variant="muted"
+                    dateTime={dateTime}
+                    className="font-mono text-xs"
+                >
+                    {formatShortTime(pitStop.date)}
+                </Typography>
+            ) : (
+                <span className="text-muted-foreground font-mono text-xs">
+                    {formatShortTime(pitStop.date)}
+                </span>
+            )}
         </div>
     )
 }

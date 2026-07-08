@@ -2,7 +2,8 @@ import type { SessionListItem } from "../model/types"
 import { Badge } from "@shared/ui/badge"
 import type { ReactNode } from "react"
 import { HighlightText } from "@shared/ui/highlight-text"
-import { TypographyH3, TypographyMuted } from "@shared/ui/typography"
+import { getDateTimeAttribute } from "@shared/lib/date-format"
+import { Typography, TypographyH3, TypographyMuted } from "@shared/ui/typography"
 
 type SessionCardProps = SessionListItem & {
     flagImageUrl?: string
@@ -16,11 +17,19 @@ const formatSessionDateRange = (dateStart?: string | null, dateEnd?: string | nu
         month: "short",
     })
 
-    const start = dateStart ? formatter.format(new Date(dateStart)) : null
-    const end = dateEnd ? formatter.format(new Date(dateEnd)) : null
+    const startDateTime = getDateTimeAttribute(dateStart)
+    const endDateTime = getDateTimeAttribute(dateEnd)
+    const startDate = startDateTime ? new Date(startDateTime) : null
+    const endDate = endDateTime ? new Date(endDateTime) : null
+    const start =
+        startDate && startDateTime
+            ? { dateTime: startDateTime, label: formatter.format(startDate) }
+            : null
+    const end =
+        endDate && endDateTime ? { dateTime: endDateTime, label: formatter.format(endDate) } : null
 
-    if (start && end && start !== end) {
-        return `${start} - ${end}`
+    if (start && end && start.label !== end.label) {
+        return { start, end }
     }
 
     return start ?? end
@@ -68,9 +77,25 @@ const SessionCard = ({
                     )}
 
                     {dateRange && (
-                        <TypographyMuted className="mt-1 text-xs leading-tight font-semibold">
-                            {dateRange}
-                        </TypographyMuted>
+                        <Typography
+                            as="div"
+                            variant="muted"
+                            className="mt-1 text-xs leading-tight font-semibold"
+                        >
+                            {"start" in dateRange ? (
+                                <>
+                                    <time dateTime={dateRange.start.dateTime}>
+                                        {dateRange.start.label}
+                                    </time>
+                                    {" - "}
+                                    <time dateTime={dateRange.end.dateTime}>
+                                        {dateRange.end.label}
+                                    </time>
+                                </>
+                            ) : (
+                                <time dateTime={dateRange.dateTime}>{dateRange.label}</time>
+                            )}
+                        </Typography>
                     )}
 
                     <div className="mt-auto flex items-center gap-2 pt-3">

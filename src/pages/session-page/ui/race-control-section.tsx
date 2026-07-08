@@ -1,7 +1,7 @@
 import { getDriverLabel } from "@entities/driver"
 import type { RaceControlMessageDto } from "@shared/api/generated/types.gen"
-import { formatShortTime } from "@shared/lib/date-format"
-import { TypographyP } from "@shared/ui/typography"
+import { formatShortTime, getDateTimeAttribute } from "@shared/lib/date-format"
+import { Typography, TypographyP } from "@shared/ui/typography"
 
 import { ExpandableListSection } from "./expandable-list-section"
 
@@ -30,11 +30,23 @@ const getRaceControlMessageKey = (message: RaceControlMessageDto) => {
 
 const RaceControlRow = ({ message, driverNamesByNumber }: RaceControlRowProps) => {
     const driverLabel = getDriverLabel(message.driverNumber, driverNamesByNumber)
+    const dateTime = getDateTimeAttribute(message.date)
 
     return (
         <div className="text-sm leading-5">
             <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-                <span className="font-mono">{formatShortTime(message.date)}</span>
+                {dateTime ? (
+                    <Typography
+                        as="time"
+                        variant="muted"
+                        dateTime={dateTime}
+                        className="font-mono text-xs"
+                    >
+                        {formatShortTime(message.date)}
+                    </Typography>
+                ) : (
+                    <span className="font-mono">{formatShortTime(message.date)}</span>
+                )}
                 <span>{message.category}</span>
                 {message.flag && <span>{message.flag}</span>}
                 {driverLabel && <span className="font-mono">{driverLabel}</span>}
