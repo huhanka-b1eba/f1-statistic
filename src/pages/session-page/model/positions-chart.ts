@@ -89,7 +89,7 @@ const getDriverLabel = (driver: DriverRow | undefined, driverNumber: number) => 
     }
 
     const firstName = nameParts[0]
-    const lastName = nameParts[nameParts.length - 1]
+    const lastName = nameParts.at(-1)
 
     return `${firstName[0]}. ${lastName}`
 }
