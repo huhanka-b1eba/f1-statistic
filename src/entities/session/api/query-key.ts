@@ -6,4 +6,6 @@ export const sessionQueryKeys = {
     meetings: (query?: unknown) => [...sessionQueryKeys.all, "meetings", query] as const,
 
     dashboard: (sessionKey: number) => [...sessionQueryKeys.all, "dashboard", sessionKey] as const,
+
+    positions: (sessionKey: number) => [...sessionQueryKeys.all, "positions", sessionKey] as const,
 }
