@@ -2,6 +2,7 @@ import { CalendarDaysIcon } from "lucide-react"
 
 import type { DashboardState } from "@shared/api/generated/types.gen"
 import { Badge } from "@shared/ui/badge"
+import { Typography } from "@shared/ui/typography"
 
 type SessionPageHeaderProps = {
     dashboard: DashboardState
@@ -16,9 +17,9 @@ export const SessionPageHeader = ({ dashboard }: SessionPageHeaderProps) => {
                 <div className="mb-3 flex items-center gap-2">
                     <Badge>{session.sessionType}</Badge>
                 </div>
-                <h1 className="text-3xl leading-tight font-semibold">
+                <Typography variant="h1" className="text-3xl leading-tight font-semibold">
                     {session.circuitShortName} Grand Prix {session.sessionName}
-                </h1>
+                </Typography>
             </div>
 
             <div className="text-muted-foreground flex items-center gap-6 text-sm">

@@ -2,6 +2,7 @@ import { MailIcon } from "lucide-react"
 import { Link } from "react-router"
 
 import { APP_ROUTES } from "@shared/config/routes"
+import { Typography } from "@shared/ui/typography"
 
 const footerLinks = [
     {
@@ -28,9 +29,9 @@ const AppFooter = () => {
                     <img src="/logo.svg" alt="" className="h-5 w-auto" />
                 </Link>
 
-                <p className="text-muted-foreground text-center text-sm">
+                <Typography variant="muted" className="text-center">
                     &copy; 2026 F1 Statistic. Built by Aigiz.
-                </p>
+                </Typography>
 
                 <div className="flex items-center gap-2">
                     {footerLinks.map(({ label, href, icon: Icon, iconSrc }) => (

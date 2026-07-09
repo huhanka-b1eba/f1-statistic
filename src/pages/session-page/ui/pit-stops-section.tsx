@@ -1,9 +1,9 @@
-import { useState } from "react"
-
 import { getDriverLabel } from "@entities/driver"
 import type { PitStopDto } from "@shared/api/generated/types.gen"
-import { formatShortTime } from "@shared/lib/date-format"
-import { Button } from "@shared/ui/button"
+import { formatShortTime, getDateTimeAttribute } from "@shared/lib/date-format"
+import { Typography } from "@shared/ui/typography"
+
+import { ExpandableListSection } from "./expandable-list-section"
 
 type PitStopsSectionProps = {
     pitStops: PitStopDto[]
@@ -14,8 +14,6 @@ type PitStopRowProps = {
     pitStop: PitStopDto
     driverNamesByNumber: Map<number, string>
 }
-
-const DEFAULT_VISIBLE_ITEMS = 3
 
 const formatPitStopDetails = (pitStop: PitStopDto) => {
     const details = [`lap ${pitStop.lapNumber ?? "-"}`]
@@ -45,61 +43,42 @@ const getPitStopKey = (pitStop: PitStopDto) => {
 
 const PitStopRow = ({ pitStop, driverNamesByNumber }: PitStopRowProps) => {
     const driverLabel = getDriverLabel(pitStop.driverNumber, driverNamesByNumber)
+    const dateTime = getDateTimeAttribute(pitStop.date)
 
     return (
         <div className="grid grid-cols-[84px_1fr_auto] items-center gap-3 rounded-sm py-1 text-sm">
             <span className="truncate font-mono font-semibold">{driverLabel}</span>
             <span className="text-muted-foreground truncate">{formatPitStopDetails(pitStop)}</span>
-            <span className="text-muted-foreground font-mono text-xs">
-                {formatShortTime(pitStop.date)}
-            </span>
+            {dateTime ? (
+                <Typography
+                    as="time"
+                    variant="muted"
+                    dateTime={dateTime}
+                    className="font-mono text-xs"
+                >
+                    {formatShortTime(pitStop.date)}
+                </Typography>
+            ) : (
+                <span className="text-muted-foreground font-mono text-xs">
+                    {formatShortTime(pitStop.date)}
+                </span>
+            )}
         </div>
     )
 }
 
 export const PitStopsSection = ({ pitStops, driverNamesByNumber }: PitStopsSectionProps) => {
-    const [isExpanded, setIsExpanded] = useState(false)
-    const visiblePitStops = isExpanded ? pitStops : pitStops.slice(0, DEFAULT_VISIBLE_ITEMS)
-    const hasMorePitStops = pitStops.length > DEFAULT_VISIBLE_ITEMS
-
     return (
-        <div className="rounded-md border p-3">
-            <div className="flex items-baseline justify-between gap-4">
-                <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                    Pit stops
-                </p>
-                <span className="font-mono text-lg leading-none font-semibold">
-                    {pitStops.length}
-                </span>
-            </div>
-
-            {pitStops.length > 0 ? (
-                <>
-                    <div className="mt-3 space-y-1">
-                        {visiblePitStops.map((pitStop) => (
-                            <PitStopRow
-                                key={getPitStopKey(pitStop)}
-                                pitStop={pitStop}
-                                driverNamesByNumber={driverNamesByNumber}
-                            />
-                        ))}
-                    </div>
-
-                    {hasMorePitStops && (
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="xs"
-                            className="text-primary hover:bg-primary/10 hover:text-primary focus-visible:ring-primary/30 mt-2 px-2"
-                            onClick={() => setIsExpanded((value) => !value)}
-                        >
-                            {isExpanded ? "Свернуть" : "Подробнее"}
-                        </Button>
-                    )}
-                </>
-            ) : (
-                <p className="text-muted-foreground mt-2 text-sm">No pit stop data</p>
+        <ExpandableListSection
+            title="Pit stops"
+            items={pitStops}
+            emptyMessage="No pit stop data"
+            className="rounded-md border p-3"
+            listClassName="mt-3 space-y-1"
+            getItemKey={getPitStopKey}
+            renderItem={(pitStop) => (
+                <PitStopRow pitStop={pitStop} driverNamesByNumber={driverNamesByNumber} />
             )}
-        </div>
+        />
     )
 }
