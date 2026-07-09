@@ -10,6 +10,7 @@ const AppHeader = () => {
                 <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4">
                     <Link
                         to={APP_ROUTES.home}
+                        viewTransition
                         className="flex items-center gap-2"
                         aria-label="F1 Statistic"
                     >
@@ -25,6 +26,7 @@ const AppHeader = () => {
                                 <li key={item.to}>
                                     <NavLink
                                         to={item.to}
+                                        viewTransition
                                         className={({ isActive }) =>
                                             cn(
                                                 "text-sm transition",

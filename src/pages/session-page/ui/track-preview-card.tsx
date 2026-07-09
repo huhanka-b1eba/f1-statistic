@@ -9,6 +9,11 @@ type TrackPreviewCardProps = {
     session: SessionListItem
 }
 
+const trackPreviewTabs = [
+    { label: "SVG", value: "svg" },
+    { label: "Map", value: "map" },
+] as const
+
 export const TrackPreviewCard = ({ session }: TrackPreviewCardProps) => {
     const location = session.location ?? session.circuitShortName ?? "-"
 
@@ -23,20 +28,26 @@ export const TrackPreviewCard = ({ session }: TrackPreviewCardProps) => {
                                 {session.circuitShortName ?? location}
                             </Typography>
                         </div>
+
                         <TabsList aria-label="Track preview type">
-                            <TabsTrigger value="svg">SVG</TabsTrigger>
-                            <TabsTrigger value="map">Map</TabsTrigger>
+                            {trackPreviewTabs.map((tab) => (
+                                <TabsTrigger key={tab.value} value={tab.value}>
+                                    {tab.label}
+                                </TabsTrigger>
+                            ))}
                         </TabsList>
                     </div>
                 </CardHeader>
-                <CardContent>
+
+                <CardContent className="min-h-96 pt-4">
                     <TabsContent
                         value="svg"
-                        className="flex h-80 w-full items-center justify-center rounded-md"
+                        className="mt-0 flex h-72 w-full items-center justify-center rounded-md"
                     >
                         <CircuitTrackPreview location={location} />
                     </TabsContent>
-                    <TabsContent value="map" className="h-80 w-full rounded-md">
+
+                    <TabsContent value="map" className="mt-0 h-72 w-full rounded-md">
                         <CircuitMap location={location} />
                     </TabsContent>
                 </CardContent>

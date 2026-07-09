@@ -35,7 +35,7 @@ export const SessionNotFound = ({ sessionKey }: SessionNotFoundProps) => {
 
                 <EmptyContent>
                     <Button asChild>
-                        <Link to="/">
+                        <Link to="/" viewTransition>
                             <ArrowLeftIcon className="size-4" />
                             Back to home
                         </Link>
