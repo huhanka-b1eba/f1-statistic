@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { VirtuosoGrid } from "react-virtuoso"
 
 import { CircuitTrackPreview } from "@entities/circuit"
-import { SessionCard } from "@entities/session"
+import { getSessionCardViewTransitionName, SessionCard } from "@entities/session"
 import type { SessionListItem } from "@entities/session"
 
 import { getSessionRoute } from "@shared/config/routes"
@@ -33,7 +33,11 @@ export const SessionList = ({ sessions, meetingFlags, search }: SessionListProps
             itemContent={(_, session) => (
                 <Link
                     to={getSessionRoute(session.sessionKey)}
+                    viewTransition
                     className="focus-visible:ring-ring block h-full w-full focus-visible:ring-2 focus-visible:outline-none"
+                    style={{
+                        viewTransitionName: getSessionCardViewTransitionName(session.sessionKey),
+                    }}
                 >
                     <SessionCard
                         {...session}

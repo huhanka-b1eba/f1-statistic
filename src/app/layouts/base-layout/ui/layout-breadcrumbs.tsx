@@ -48,7 +48,9 @@ const LayoutBreadcrumbs = () => {
                                     <BreadcrumbPage>{match.handle.breadcrumb}</BreadcrumbPage>
                                 ) : (
                                     <BreadcrumbLink asChild>
-                                        <Link to={match.pathname}>{match.handle.breadcrumb}</Link>
+                                        <Link to={match.pathname} viewTransition>
+                                            {match.handle.breadcrumb}
+                                        </Link>
                                     </BreadcrumbLink>
                                 )}
                             </BreadcrumbItem>

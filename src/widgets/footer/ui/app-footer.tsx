@@ -23,6 +23,7 @@ const AppFooter = () => {
             <div className="mx-auto flex max-w-[1280px] flex-row items-center justify-between gap-4 px-4 py-5">
                 <Link
                     to={APP_ROUTES.home}
+                    viewTransition
                     className="flex w-fit min-w-0 items-center"
                     aria-label="F1"
                 >

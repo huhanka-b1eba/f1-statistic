@@ -1,6 +1,9 @@
 import { useParams } from "react-router"
 
-import { useGetDashboardBySessionKeyQuery } from "@entities/session"
+import {
+    getSessionCardViewTransitionName,
+    useGetDashboardBySessionKeyQuery,
+} from "@entities/session"
 
 import type { DashboardState } from "@shared/api/generated/types.gen"
 
@@ -54,7 +57,14 @@ const SessionPage = () => {
     }
 
     return (
-        <div className="text-left">
+        <div
+            className="text-left"
+            style={{
+                viewTransitionName: getSessionCardViewTransitionName(
+                    dashboardData.session.sessionKey,
+                ),
+            }}
+        >
             <SessionPageHeader dashboard={dashboardData} />
 
             <div className="mt-2 grid grid-cols-[420px_1fr] gap-6">
