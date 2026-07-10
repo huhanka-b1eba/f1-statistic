@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { Link } from "react-router"
 import { Virtuoso } from "react-virtuoso"
 
+import { getDriverTeamColor } from "@entities/driver"
 import type { DriverRow } from "@shared/api/generated/types.gen"
 import { getDriverRoute } from "@shared/config/routes"
 import { Badge } from "@shared/ui/badge"
@@ -35,10 +36,6 @@ const formatGap = (value: DriverRow["gapToLeader"]) => {
     }
 
     return String(value)
-}
-
-const getTeamColor = (driver: DriverRow) => {
-    return driver.driver?.teamColour ? `#${driver.driver.teamColour}` : "var(--border)"
 }
 
 const getDriverName = (driver: DriverRow) => {
@@ -91,7 +88,7 @@ export const VirtualDriversCard = ({ drivers }: VirtualDriversCardProps) => {
                     style={{ height: 520 }}
                     data={drivers}
                     itemContent={(_, driver) => {
-                        const teamColor = getTeamColor(driver)
+                        const teamColor = getDriverTeamColor(driver, "var(--border)")
                         const hasHeadshot = Boolean(driver.driver?.headshotUrl)
                         const avatarClassName = hasHeadshot
                             ? "flex size-24 items-end justify-center overflow-hidden rounded-md"
