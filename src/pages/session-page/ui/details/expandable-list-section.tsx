@@ -42,7 +42,9 @@ export const ExpandableListSection = <TItem,>({
 }: ExpandableListSectionProps<TItem>) => {
     const [isExpanded, setIsExpanded] = useState(false)
     const visibleItems = isExpanded ? items : items.slice(0, visibleItemsCount)
+    const hasItems = items.length > 0
     const hasMoreItems = items.length > visibleItemsCount
+    const shouldShowEmptyMessage = !hasItems && Boolean(emptyMessage)
 
     return (
         <div className={className}>
@@ -60,7 +62,7 @@ export const ExpandableListSection = <TItem,>({
                 </div>
             )}
 
-            {items.length > 0 ? (
+            {hasItems && (
                 <>
                     <div className={listClassName}>
                         {visibleItems.map((item, index) => (
@@ -85,11 +87,13 @@ export const ExpandableListSection = <TItem,>({
                         </Button>
                     )}
                 </>
-            ) : emptyMessage ? (
+            )}
+
+            {shouldShowEmptyMessage && (
                 <Typography variant="muted" className={cn("mt-2", emptyClassName)}>
                     {emptyMessage}
                 </Typography>
-            ) : null}
+            )}
         </div>
     )
 }
