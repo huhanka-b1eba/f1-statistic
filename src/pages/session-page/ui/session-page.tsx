@@ -6,7 +6,7 @@ import {
     useGetPositionsBySessionKeyQuery,
 } from "@entities/session"
 
-import type { DashboardState } from "@shared/api/generated/types.gen"
+import type { DashboardState, ErrorResponse } from "@shared/api/generated/types.gen"
 
 import { SessionDetailsCard } from "./details/session-details-card"
 import { SessionLoadError } from "./session-load-error"
@@ -26,6 +26,10 @@ const isDashboardState = (value: unknown): value is DashboardState => {
         "pitStops" in value &&
         "raceControl" in value
     )
+}
+
+const isPositionError = (value: unknown): value is ErrorResponse => {
+    return typeof value === "object" && value !== null && "error" in value
 }
 
 const SessionPage = () => {
@@ -63,12 +67,16 @@ const SessionPage = () => {
     }
 
     const dashboardData = dashboardQuery.data?.data
-    // response.data can be an error, so check that it is an array.
-    const positionsData = Array.isArray(positionsQuery.data?.data) ? positionsQuery.data.data : []
 
-    if (dashboardQuery.isError || !isDashboardState(dashboardData)) {
+    if (
+        dashboardQuery.isError ||
+        !isDashboardState(dashboardData) ||
+        isPositionError(positionsQuery.data?.data)
+    ) {
         return <SessionLoadError />
     }
+
+    const positionsData = positionsQuery.data?.data
 
     return (
         <div
