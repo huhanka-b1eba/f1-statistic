@@ -1,0 +1,1354 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "F1 Live Race Control Backend API",
+        "version": "1.0.0",
+        "description": "REST endpoints for OpenF1 meetings, sessions, and dashboard snapshots. Socket.io live and replay events are documented at `/async-docs`."
+    },
+    "servers": [{ "url": "/", "description": "Current server" }],
+    "tags": [
+        { "name": "Health", "description": "Service health checks." },
+        {
+            "name": "Sessions",
+            "description": "OpenF1 meetings, sessions, and dashboard snapshots."
+        },
+        { "name": "Race", "description": "Race overview page payloads and sub-resources." },
+        { "name": "Drivers", "description": "Driver lists and driver detail page payloads." },
+        { "name": "Compare", "description": "Two-driver lap and telemetry comparison payloads." }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": ["Health"],
+                "summary": "Check service health",
+                "responses": {
+                    "200": {
+                        "description": "Service health status.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/HealthResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/meetings": {
+            "get": {
+                "tags": ["Sessions"],
+                "summary": "List meetings",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter by championship year.",
+                        "schema": { "type": "integer", "example": 2023 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Meetings matching the optional filters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/MeetingListItem" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions": {
+            "get": {
+                "tags": ["Sessions"],
+                "summary": "List sessions",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter by championship year.",
+                        "schema": { "type": "integer", "example": 2023 }
+                    },
+                    {
+                        "name": "meetingKey",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter by OpenF1 meeting key.",
+                        "schema": { "type": "integer", "example": 1219 }
+                    },
+                    {
+                        "name": "sessionName",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter by OpenF1 session name, for example Race or Qualifying.",
+                        "schema": { "type": "string", "example": "Race" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sessions matching the optional filters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/SessionListItem" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}": {
+            "get": {
+                "tags": ["Sessions"],
+                "summary": "Get one session",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session details.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/SessionListItem" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Session was not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/race": {
+            "get": {
+                "tags": ["Race"],
+                "summary": "Get race overview page state",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Race overview page payload.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/RacePageState" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/results": {
+            "get": {
+                "tags": ["Race"],
+                "summary": "Get session results",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Final session results.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/SessionResultDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/positions": {
+            "get": {
+                "tags": ["Race"],
+                "summary": "Get position history",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Position timeline.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/PositionPointDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/race-control": {
+            "get": {
+                "tags": ["Race"],
+                "summary": "Get race-control messages",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Race-control timeline.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RaceControlMessageDto"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/pit-stops": {
+            "get": {
+                "tags": ["Race"],
+                "summary": "Get pit stops",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pit-stop timeline.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/PitStopDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/drivers": {
+            "get": {
+                "tags": ["Drivers"],
+                "summary": "Get session drivers",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Drivers in the session.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/DriverDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/drivers/{driverNumber}": {
+            "get": {
+                "tags": ["Drivers"],
+                "summary": "Get driver detail page state",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverNumber",
+                        "in": "path",
+                        "required": true,
+                        "description": "F1 driver number.",
+                        "schema": { "type": "integer", "example": 16 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driver detail page payload.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/DriverPageState" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/drivers/{driverNumber}/laps": {
+            "get": {
+                "tags": ["Drivers"],
+                "summary": "Get driver laps",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverNumber",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 16 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driver lap list.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/LapDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/drivers/{driverNumber}/stints": {
+            "get": {
+                "tags": ["Drivers"],
+                "summary": "Get driver stints",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverNumber",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 16 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driver stint list.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/StintDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/drivers/{driverNumber}/pit-stops": {
+            "get": {
+                "tags": ["Drivers"],
+                "summary": "Get driver pit stops",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverNumber",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 16 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driver pit-stop list.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/PitStopDto" }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/compare": {
+            "get": {
+                "tags": ["Compare"],
+                "summary": "Compare two drivers on one lap",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverA",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 4 }
+                    },
+                    {
+                        "name": "driverB",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 81 }
+                    },
+                    {
+                        "name": "lapNumber",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 35 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lap comparison payload.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ComparePageState" }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/compare/telemetry": {
+            "get": {
+                "tags": ["Compare"],
+                "summary": "Compare two drivers' telemetry on one lap",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    },
+                    {
+                        "name": "driverA",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 4 }
+                    },
+                    {
+                        "name": "driverB",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 81 }
+                    },
+                    {
+                        "name": "lapNumber",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "type": "integer", "example": 35 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Telemetry comparison payload.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/CompareTelemetryState" }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/dashboard": {
+            "get": {
+                "tags": ["Sessions"],
+                "summary": "Get dashboard state for a session",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aggregated dashboard state.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/DashboardState" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sessions/{sessionKey}/sync": {
+            "post": {
+                "tags": ["Sessions"],
+                "summary": "Force refresh a session from OpenF1",
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "required": true,
+                        "description": "OpenF1 session key.",
+                        "schema": { "type": "integer", "example": 9165 }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Freshly synchronized dashboard state.",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/DashboardState" }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorResponse": {
+                "type": "object",
+                "required": ["error"],
+                "properties": { "error": { "type": "string" } }
+            },
+            "HealthResponse": {
+                "type": "object",
+                "required": ["ok", "db", "timestamp"],
+                "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "db": { "type": "string", "enum": ["connected", "unavailable"] },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                }
+            },
+            "OpenF1Meeting": {
+                "type": "object",
+                "required": ["meeting_key", "year"],
+                "properties": {
+                    "meeting_key": { "type": "integer" },
+                    "year": { "type": "integer" },
+                    "circuit_key": { "type": "integer", "nullable": true },
+                    "circuit_image": { "type": "string", "nullable": true },
+                    "circuit_info_url": { "type": "string", "nullable": true },
+                    "country_name": { "type": "string", "nullable": true },
+                    "circuit_short_name": { "type": "string", "nullable": true },
+                    "circuit_type": { "type": "string", "nullable": true },
+                    "country_code": { "type": "string", "nullable": true },
+                    "country_flag": { "type": "string", "nullable": true },
+                    "country_key": { "type": "integer", "nullable": true },
+                    "meeting_name": { "type": "string", "nullable": true },
+                    "date_start": { "type": "string", "nullable": true },
+                    "date_end": { "type": "string", "nullable": true },
+                    "gmt_offset": { "type": "string", "nullable": true },
+                    "is_cancelled": { "type": "boolean", "nullable": true },
+                    "location": { "type": "string", "nullable": true },
+                    "meeting_official_name": { "type": "string", "nullable": true }
+                }
+            },
+            "OpenF1Session": {
+                "type": "object",
+                "required": ["session_key", "meeting_key", "session_name", "session_type", "year"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer" },
+                    "session_name": { "type": "string" },
+                    "session_type": { "type": "string" },
+                    "date_start": { "type": "string", "nullable": true },
+                    "date_end": { "type": "string", "nullable": true },
+                    "circuit_short_name": { "type": "string", "nullable": true },
+                    "year": { "type": "integer" }
+                }
+            },
+            "OpenF1Driver": {
+                "type": "object",
+                "required": ["session_key", "driver_number"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer", "nullable": true },
+                    "driver_number": { "type": "integer" },
+                    "broadcast_name": { "type": "string", "nullable": true },
+                    "first_name": { "type": "string", "nullable": true },
+                    "last_name": { "type": "string", "nullable": true },
+                    "full_name": { "type": "string", "nullable": true },
+                    "name_acronym": { "type": "string", "nullable": true },
+                    "team_name": { "type": "string", "nullable": true },
+                    "team_colour": { "type": "string", "nullable": true },
+                    "headshot_url": { "type": "string", "nullable": true }
+                }
+            },
+            "OpenF1Lap": {
+                "type": "object",
+                "required": ["session_key", "driver_number", "lap_number"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer", "nullable": true },
+                    "driver_number": { "type": "integer" },
+                    "lap_number": { "type": "integer" },
+                    "date_start": { "type": "string", "nullable": true },
+                    "lap_duration": { "type": "number", "nullable": true },
+                    "duration_sector_1": { "type": "number", "nullable": true },
+                    "duration_sector_2": { "type": "number", "nullable": true },
+                    "duration_sector_3": { "type": "number", "nullable": true },
+                    "is_pit_out_lap": { "type": "boolean", "nullable": true },
+                    "i1_speed": { "type": "integer", "nullable": true },
+                    "i2_speed": { "type": "integer", "nullable": true },
+                    "st_speed": { "type": "integer", "nullable": true }
+                }
+            },
+            "OpenF1Pit": {
+                "type": "object",
+                "required": ["session_key", "driver_number", "date"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer", "nullable": true },
+                    "driver_number": { "type": "integer" },
+                    "date": { "type": "string" },
+                    "lap_number": { "type": "integer", "nullable": true },
+                    "lane_duration": { "type": "number", "nullable": true },
+                    "stop_duration": { "type": "number", "nullable": true }
+                }
+            },
+            "OpenF1RaceControl": {
+                "type": "object",
+                "required": ["session_key", "date", "category"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer", "nullable": true },
+                    "date": { "type": "string" },
+                    "category": { "type": "string" },
+                    "flag": { "type": "string", "nullable": true },
+                    "driver_number": { "type": "integer", "nullable": true },
+                    "lap_number": { "type": "integer", "nullable": true },
+                    "message": { "type": "string", "nullable": true },
+                    "scope": { "type": "string", "nullable": true },
+                    "sector": { "type": "integer", "nullable": true },
+                    "qualifying_phase": { "type": "integer", "nullable": true }
+                }
+            },
+            "OpenF1Stint": {
+                "type": "object",
+                "required": ["session_key", "driver_number", "stint_number"],
+                "properties": {
+                    "session_key": { "type": "integer" },
+                    "meeting_key": { "type": "integer", "nullable": true },
+                    "driver_number": { "type": "integer" },
+                    "stint_number": { "type": "integer" },
+                    "lap_start": { "type": "integer", "nullable": true },
+                    "lap_end": { "type": "integer", "nullable": true },
+                    "compound": { "type": "string", "nullable": true },
+                    "tyre_age_at_start": { "type": "integer", "nullable": true }
+                }
+            },
+            "MeetingListItem": {
+                "type": "object",
+                "required": ["meetingKey", "year"],
+                "properties": {
+                    "meetingKey": { "type": "integer" },
+                    "year": { "type": "integer" },
+                    "circuitKey": { "type": "integer", "nullable": true },
+                    "circuitImage": { "type": "string", "nullable": true },
+                    "circuitInfoUrl": { "type": "string", "nullable": true },
+                    "countryName": { "type": "string", "nullable": true },
+                    "circuitShortName": { "type": "string", "nullable": true },
+                    "circuitType": { "type": "string", "nullable": true },
+                    "countryCode": { "type": "string", "nullable": true },
+                    "countryFlag": { "type": "string", "nullable": true },
+                    "countryKey": { "type": "integer", "nullable": true },
+                    "meetingName": { "type": "string", "nullable": true },
+                    "dateStart": { "type": "string", "nullable": true },
+                    "dateEnd": { "type": "string", "nullable": true },
+                    "gmtOffset": { "type": "string", "nullable": true },
+                    "isCancelled": { "type": "boolean", "nullable": true },
+                    "location": { "type": "string", "nullable": true },
+                    "meetingOfficialName": { "type": "string", "nullable": true }
+                }
+            },
+            "SessionListItem": {
+                "type": "object",
+                "required": ["sessionKey", "meetingKey", "sessionName", "sessionType", "year"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer" },
+                    "sessionName": { "type": "string" },
+                    "sessionType": { "type": "string" },
+                    "dateStart": { "type": "string", "nullable": true },
+                    "dateEnd": { "type": "string", "nullable": true },
+                    "countryName": { "type": "string", "nullable": true },
+                    "countryCode": { "type": "string", "nullable": true },
+                    "location": { "type": "string", "nullable": true },
+                    "circuitShortName": { "type": "string", "nullable": true },
+                    "year": { "type": "integer" }
+                }
+            },
+            "DriverDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "broadcastName": { "type": "string", "nullable": true },
+                    "firstName": { "type": "string", "nullable": true },
+                    "lastName": { "type": "string", "nullable": true },
+                    "fullName": { "type": "string", "nullable": true },
+                    "nameAcronym": { "type": "string", "nullable": true },
+                    "teamName": { "type": "string", "nullable": true },
+                    "teamColour": { "type": "string", "nullable": true },
+                    "headshotUrl": { "type": "string", "nullable": true }
+                }
+            },
+            "LapDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber", "lapNumber"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "lapNumber": { "type": "integer" },
+                    "dateStart": { "type": "string", "nullable": true },
+                    "lapDuration": { "type": "number", "nullable": true },
+                    "durationSector1": { "type": "number", "nullable": true },
+                    "durationSector2": { "type": "number", "nullable": true },
+                    "durationSector3": { "type": "number", "nullable": true },
+                    "isPitOutLap": { "type": "boolean", "nullable": true },
+                    "i1Speed": { "type": "integer", "nullable": true },
+                    "i2Speed": { "type": "integer", "nullable": true },
+                    "stSpeed": { "type": "integer", "nullable": true }
+                }
+            },
+            "PitStopDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber", "date"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "date": { "type": "string" },
+                    "lapNumber": { "type": "integer", "nullable": true },
+                    "laneDuration": { "type": "number", "nullable": true },
+                    "stopDuration": { "type": "number", "nullable": true }
+                }
+            },
+            "RaceControlMessageDto": {
+                "type": "object",
+                "required": ["sessionKey", "date", "category"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "date": { "type": "string" },
+                    "category": { "type": "string" },
+                    "flag": { "type": "string", "nullable": true },
+                    "driverNumber": { "type": "integer", "nullable": true },
+                    "lapNumber": { "type": "integer", "nullable": true },
+                    "message": { "type": "string", "nullable": true },
+                    "scope": { "type": "string", "nullable": true },
+                    "sector": { "type": "integer", "nullable": true },
+                    "qualifyingPhase": { "type": "integer", "nullable": true }
+                }
+            },
+            "StintDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber", "stintNumber"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "stintNumber": { "type": "integer" },
+                    "lapStart": { "type": "integer", "nullable": true },
+                    "lapEnd": { "type": "integer", "nullable": true },
+                    "compound": { "type": "string", "nullable": true },
+                    "tyreAgeAtStart": { "type": "integer", "nullable": true }
+                }
+            },
+            "PositionPointDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber", "position", "date"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "position": { "type": "integer" },
+                    "date": { "type": "string" }
+                }
+            },
+            "SessionResultDto": {
+                "type": "object",
+                "required": ["sessionKey", "driverNumber", "position"],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "position": { "type": "integer" },
+                    "duration": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "gapToLeader": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "numberOfLaps": { "type": "integer", "nullable": true },
+                    "dnf": { "type": "boolean" },
+                    "dns": { "type": "boolean" },
+                    "dsq": { "type": "boolean" }
+                }
+            },
+            "SessionResultRowDto": {
+                "type": "object",
+                "required": [
+                    "driverNumber",
+                    "position",
+                    "gapToLeader",
+                    "duration",
+                    "numberOfLaps",
+                    "dnf",
+                    "dns",
+                    "dsq",
+                    "driver"
+                ],
+                "properties": {
+                    "driverNumber": { "type": "integer" },
+                    "position": { "type": "integer" },
+                    "gapToLeader": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "duration": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "numberOfLaps": { "type": "integer", "nullable": true },
+                    "dnf": { "type": "boolean" },
+                    "dns": { "type": "boolean" },
+                    "dsq": { "type": "boolean" },
+                    "driver": {
+                        "allOf": [{ "$ref": "#/components/schemas/DriverDto" }],
+                        "nullable": true
+                    }
+                }
+            },
+            "CarDataSampleDto": {
+                "type": "object",
+                "required": [
+                    "sessionKey",
+                    "driverNumber",
+                    "date",
+                    "speed",
+                    "throttle",
+                    "brake",
+                    "nGear",
+                    "rpm",
+                    "drs"
+                ],
+                "properties": {
+                    "sessionKey": { "type": "integer" },
+                    "meetingKey": { "type": "integer", "nullable": true },
+                    "driverNumber": { "type": "integer" },
+                    "date": { "type": "string" },
+                    "speed": { "type": "integer" },
+                    "throttle": { "type": "integer" },
+                    "brake": { "type": "integer" },
+                    "nGear": { "type": "integer" },
+                    "rpm": { "type": "integer" },
+                    "drs": { "type": "integer" }
+                }
+            },
+            "RacePageState": {
+                "type": "object",
+                "required": [
+                    "session",
+                    "results",
+                    "positionHistory",
+                    "raceControl",
+                    "pitStops",
+                    "dataSource"
+                ],
+                "properties": {
+                    "session": { "$ref": "#/components/schemas/SessionListItem" },
+                    "results": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/SessionResultRowDto" }
+                    },
+                    "positionHistory": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/PositionPointDto" }
+                    },
+                    "raceControl": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/RaceControlMessageDto" }
+                    },
+                    "pitStops": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/PitStopDto" }
+                    },
+                    "dataSource": { "type": "string", "enum": ["cache", "database", "api"] }
+                }
+            },
+            "DriverPageState": {
+                "type": "object",
+                "required": ["session", "driver", "laps", "stints", "pitStops", "dataSource"],
+                "properties": {
+                    "session": { "$ref": "#/components/schemas/SessionListItem" },
+                    "driver": { "$ref": "#/components/schemas/DriverDto" },
+                    "laps": { "type": "array", "items": { "$ref": "#/components/schemas/LapDto" } },
+                    "stints": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/StintDto" }
+                    },
+                    "pitStops": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/PitStopDto" }
+                    },
+                    "dataSource": { "type": "string", "enum": ["cache", "database", "api"] }
+                }
+            },
+            "ComparePageState": {
+                "type": "object",
+                "required": ["session", "lapNumber", "drivers", "delta"],
+                "properties": {
+                    "session": { "$ref": "#/components/schemas/SessionListItem" },
+                    "lapNumber": { "type": "integer" },
+                    "drivers": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["driverNumber", "driver", "lap"],
+                            "properties": {
+                                "driverNumber": { "type": "integer" },
+                                "driver": {
+                                    "allOf": [{ "$ref": "#/components/schemas/DriverDto" }],
+                                    "nullable": true
+                                },
+                                "lap": {
+                                    "allOf": [{ "$ref": "#/components/schemas/LapDto" }],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "delta": {
+                        "type": "object",
+                        "required": ["lapDuration", "sector1", "sector2", "sector3"],
+                        "properties": {
+                            "lapDuration": { "type": "number", "nullable": true },
+                            "sector1": { "type": "number", "nullable": true },
+                            "sector2": { "type": "number", "nullable": true },
+                            "sector3": { "type": "number", "nullable": true }
+                        }
+                    }
+                }
+            },
+            "CompareTelemetryState": {
+                "type": "object",
+                "required": ["lapNumber", "drivers"],
+                "properties": {
+                    "lapNumber": { "type": "integer" },
+                    "drivers": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["driverNumber", "samples"],
+                            "properties": {
+                                "driverNumber": { "type": "integer" },
+                                "samples": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/CarDataSampleDto" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SectorTimes": {
+                "type": "object",
+                "required": ["sector1", "sector2", "sector3"],
+                "properties": {
+                    "sector1": { "type": "number", "nullable": true },
+                    "sector2": { "type": "number", "nullable": true },
+                    "sector3": { "type": "number", "nullable": true }
+                }
+            },
+            "DriverRow": {
+                "type": "object",
+                "required": [
+                    "driverNumber",
+                    "position",
+                    "interval",
+                    "gapToLeader",
+                    "currentLap",
+                    "lastLap",
+                    "sectors",
+                    "compound",
+                    "tyreAge",
+                    "driver",
+                    "latestLap",
+                    "currentStint"
+                ],
+                "properties": {
+                    "driverNumber": { "type": "integer" },
+                    "position": { "type": "integer", "nullable": true },
+                    "interval": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "gapToLeader": {
+                        "nullable": true,
+                        "oneOf": [
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "nullable": true,
+                                    "oneOf": [{ "type": "number" }, { "type": "string" }]
+                                }
+                            }
+                        ]
+                    },
+                    "currentLap": { "type": "integer", "nullable": true },
+                    "lastLap": { "type": "number", "nullable": true },
+                    "sectors": { "$ref": "#/components/schemas/SectorTimes" },
+                    "compound": { "type": "string", "nullable": true },
+                    "tyreAge": { "type": "integer", "nullable": true },
+                    "driver": {
+                        "allOf": [{ "$ref": "#/components/schemas/DriverDto" }],
+                        "nullable": true
+                    },
+                    "latestLap": {
+                        "allOf": [{ "$ref": "#/components/schemas/LapDto" }],
+                        "nullable": true
+                    },
+                    "currentStint": {
+                        "allOf": [{ "$ref": "#/components/schemas/StintDto" }],
+                        "nullable": true
+                    }
+                }
+            },
+            "ReplayState": {
+                "type": "object",
+                "required": ["progress", "speed", "isPlaying"],
+                "properties": {
+                    "progress": { "type": "number", "minimum": 0, "maximum": 1 },
+                    "speed": { "type": "number" },
+                    "isPlaying": { "type": "boolean" }
+                }
+            },
+            "DashboardState": {
+                "type": "object",
+                "required": [
+                    "session",
+                    "asOf",
+                    "sessionStatus",
+                    "currentFlag",
+                    "drivers",
+                    "pitStops",
+                    "raceControl",
+                    "dataSource"
+                ],
+                "properties": {
+                    "session": { "$ref": "#/components/schemas/SessionListItem" },
+                    "asOf": { "type": "string", "format": "date-time" },
+                    "sessionStatus": { "type": "string", "nullable": true },
+                    "currentFlag": { "type": "string", "nullable": true },
+                    "drivers": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/DriverRow" }
+                    },
+                    "pitStops": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/PitStopDto" }
+                    },
+                    "raceControl": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/RaceControlMessageDto" }
+                    },
+                    "dataSource": {
+                        "type": "string",
+                        "enum": ["cache", "database", "api"],
+                        "description": "How this response's required datasets were resolved: in-memory cache, SQLite, or a fresh OpenF1 fetch for this request."
+                    },
+                    "replay": { "$ref": "#/components/schemas/ReplayState" }
+                }
+            }
+        }
+    }
+}
