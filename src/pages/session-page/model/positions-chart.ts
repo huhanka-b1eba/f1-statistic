@@ -1,5 +1,7 @@
 import type { DriverRow, PositionPointDto } from "@shared/api/generated/types.gen"
 
+import { getDriverTeamColor } from "@entities/driver"
+
 export type ChartPoint = {
     time: string
     timestamp: number
@@ -34,10 +36,6 @@ const MIN_CHART_HEIGHT = 640
 const POSITION_ROW_HEIGHT = 40
 const TIME_BUCKET_MS = 30_000
 
-export const getTeamColor = (driver: DriverRow | undefined) => {
-    return driver?.driver?.teamColour ? `#${driver.driver.teamColour}` : "var(--muted-foreground)"
-}
-
 export const getChartHeight = (chartData: NormalizedPositionsData) => {
     const hasPositionData = chartData.data.length > 0 && chartData.series.length > 0
 
@@ -60,7 +58,7 @@ export const getDriversByPosition = (drivers: DriverRow[]) => {
 
         driversByPosition.set(driver.position, {
             acronym: getDriverAcronym(driver, driver.driverNumber),
-            color: getTeamColor(driver),
+            color: getDriverTeamColor(driver),
             headshotUrl: driver.driver?.headshotUrl,
         })
     }
@@ -127,13 +125,13 @@ export const normalizePositionsData = (
     }
 
     const driversByNumber = getDriverByNumber(drivers)
-    const sortedPositions = [...positions].sort(
+    const sortedPositions = positions.toSorted(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     )
     const startTimestamp = getBucketTimestamp(sortedPositions[0].date)
     const rawPointsByTimestamp = new Map<number, ChartPoint>()
 
-    for (const item of sortedPositions) {
+    sortedPositions.forEach((item) => {
         const timestamp = getBucketTimestamp(item.date)
         const dataKey = getDriverDataKey(item.driverNumber)
         const existingPoint = rawPointsByTimestamp.get(timestamp) ?? {
@@ -143,7 +141,7 @@ export const normalizePositionsData = (
 
         existingPoint[dataKey] = item.position
         rawPointsByTimestamp.set(timestamp, existingPoint)
-    }
+    })
 
     const driverNumbers = Array.from(
         new Set(sortedPositions.map((position) => position.driverNumber)),
@@ -154,7 +152,7 @@ export const normalizePositionsData = (
             const driver = driversByNumber.get(driverNumber)
 
             return {
-                color: getTeamColor(driver),
+                color: getDriverTeamColor(driver),
                 dataKey: getDriverDataKey(driverNumber),
                 driverNumber,
                 label: getDriverLabel(driver, driverNumber),
@@ -171,7 +169,8 @@ export const normalizePositionsData = (
             )
         })
 
-    const rawData = Array.from(rawPointsByTimestamp.values()).sort(
+    // Map.values() returns an iterator, so convert it to an array for using toSorted()
+    const rawData = Array.from(rawPointsByTimestamp.values()).toSorted(
         (a, b) => a.timestamp - b.timestamp,
     )
     const lastPositionsByDriver = new Map<number, number>()
@@ -181,7 +180,7 @@ export const normalizePositionsData = (
             time: point.time,
         }
 
-        for (const item of series) {
+        series.forEach((item) => {
             const currentPosition = point[item.dataKey]
 
             if (typeof currentPosition === "number") {
@@ -193,7 +192,7 @@ export const normalizePositionsData = (
             if (lastPosition != null) {
                 filledPoint[item.dataKey] = lastPosition
             }
-        }
+        })
 
         return filledPoint
     })

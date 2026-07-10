@@ -60,38 +60,46 @@ export const PositionsChartCard = ({
     const hasPositionData = chartData.data.length > 0 && chartData.series.length > 0
     const chartHeight = getChartHeight(chartData)
 
+    const renderContent = () => {
+        if (isLoading) {
+            return <ChartSkeleton chartHeight={chartHeight} />
+        }
+
+        if (isError) {
+            return (
+                <ChartMessage chartHeight={chartHeight}>
+                    Position history is unavailable
+                </ChartMessage>
+            )
+        }
+
+        if (hasPositionData) {
+            return (
+                <PositionsLineChart
+                    chartData={chartData}
+                    chartHeight={chartHeight}
+                    driversByPosition={driversByPosition}
+                />
+            )
+        }
+
+        return <ChartMessage chartHeight={chartHeight}>No position history yet</ChartMessage>
+    }
+
     return (
         <Card className="rounded-lg">
-            <CardHeader>
-                <div className="flex items-start justify-between gap-4">
-                    <div>
-                        <CardTitle>Position Chart</CardTitle>
-                        <Typography variant="muted" className="mt-1">
-                            Driver positions from start to finish
-                        </Typography>
-                    </div>
-
-                    <Badge variant="secondary">{chartData.series.length} drivers</Badge>
+            <CardHeader className="flex items-start justify-between gap-4">
+                <div>
+                    <CardTitle>Position Chart</CardTitle>
+                    <Typography variant="muted" className="mt-1">
+                        Driver positions from start to finish
+                    </Typography>
                 </div>
+
+                <Badge variant="secondary">{chartData.series.length} drivers</Badge>
             </CardHeader>
 
-            <CardContent>
-                {isLoading ? (
-                    <ChartSkeleton chartHeight={chartHeight} />
-                ) : isError ? (
-                    <ChartMessage chartHeight={chartHeight}>
-                        Position history is unavailable
-                    </ChartMessage>
-                ) : hasPositionData ? (
-                    <PositionsLineChart
-                        chartData={chartData}
-                        chartHeight={chartHeight}
-                        driversByPosition={driversByPosition}
-                    />
-                ) : (
-                    <ChartMessage chartHeight={chartHeight}>No position history yet</ChartMessage>
-                )}
-            </CardContent>
+            <CardContent>{renderContent()}</CardContent>
         </Card>
     )
 }

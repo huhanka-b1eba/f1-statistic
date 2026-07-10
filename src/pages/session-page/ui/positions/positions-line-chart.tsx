@@ -10,12 +10,41 @@ import {
 } from "recharts"
 
 import { PositionAxisTick } from "./position-axis-tick"
-import type { NormalizedPositionsData, PositionTickDriver } from "../../model/positions-chart"
+import type {
+    ChartPoint,
+    NormalizedPositionsData,
+    PositionSeries,
+    PositionTickDriver,
+} from "../../model/positions-chart"
 
 type PositionsLineChartProps = {
     chartData: NormalizedPositionsData
     chartHeight: number
     driversByPosition: Map<number, PositionTickDriver>
+}
+
+type LastPositionDotProps = {
+    lastChartPoint: ChartPoint
+    series: PositionSeries
+}
+
+const LastPositionDot = ({ lastChartPoint, series }: LastPositionDotProps) => {
+    const position = lastChartPoint[series.dataKey]
+
+    if (typeof position !== "number") {
+        return null
+    }
+
+    return (
+        <ReferenceDot
+            x={lastChartPoint.time}
+            y={position}
+            r={4}
+            fill={series.color}
+            stroke="var(--background)"
+            strokeWidth={1.5}
+        />
+    )
 }
 
 export const PositionsLineChart = ({
@@ -92,25 +121,13 @@ export const PositionsLineChart = ({
                     ))}
 
                     {lastChartPoint &&
-                        chartData.series.map((series) => {
-                            const position = lastChartPoint[series.dataKey]
-
-                            if (typeof position !== "number") {
-                                return null
-                            }
-
-                            return (
-                                <ReferenceDot
-                                    key={`${series.dataKey}-last-position`}
-                                    x={lastChartPoint.time}
-                                    y={position}
-                                    r={4}
-                                    fill={series.color}
-                                    stroke="var(--background)"
-                                    strokeWidth={1.5}
-                                />
-                            )
-                        })}
+                        chartData.series.map((series) => (
+                            <LastPositionDot
+                                key={`${series.dataKey}-last-position`}
+                                lastChartPoint={lastChartPoint}
+                                series={series}
+                            />
+                        ))}
                 </LineChart>
             </ResponsiveContainer>
         </div>
